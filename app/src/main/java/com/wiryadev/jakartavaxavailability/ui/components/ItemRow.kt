@@ -3,6 +3,7 @@ package com.wiryadev.jakartavaxavailability.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,15 +26,17 @@ fun ItemRow(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        elevation = 6.dp
+        elevation = 8.dp,
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(
             modifier = modifier
                 .background(
                     color = MaterialTheme.colors.background
                 )
-                .padding(24.dp)
                 .clickable(onClick = onClick)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Column {
                 Text(

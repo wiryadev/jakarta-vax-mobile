@@ -19,7 +19,7 @@ data class DetailLokasi(
     @SerializedName("lon")
     val lon: String,
     @SerializedName("osm_id")
-    val osmId: Int,
+    val osmId: Long,
     @SerializedName("osm_type")
     val osmType: String,
     @SerializedName("place_id")

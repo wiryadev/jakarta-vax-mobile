@@ -1,9 +1,8 @@
 package com.wiryadev.jakartavaxavailability.utils
 
-import java.util.*
 
-fun String.capitalizeWords(): String = split(" ").map { word ->
-    word.replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+fun String.capitalizeWords(): String = split(" ").joinToString(" ") { word ->
+    word.lowercase().replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase() else it.toString()
     }
-}.joinToString(" ")
+}
