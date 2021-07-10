@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface Endpoint {
     @GET(".")
-    suspend fun getVaccinesList(): VaccineResponse
+    suspend fun getVaccines(): VaccineResponse
 }

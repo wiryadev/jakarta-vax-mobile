@@ -10,5 +10,5 @@ class ApiService @Inject constructor(private val endpoint: Endpoint) {
         const val BASE_URL = "https://vaksin-jakarta.yggdrasil.id/"
     }
 
-    suspend fun getVaccinesList(): VaccineResponse = endpoint.getVaccinesList()
+    suspend fun getVaccines(): VaccineResponse = endpoint.getVaccines()
 }
