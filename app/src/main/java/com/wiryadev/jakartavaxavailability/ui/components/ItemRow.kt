@@ -1,10 +1,12 @@
 package com.wiryadev.jakartavaxavailability.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,6 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
 import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
+import com.wiryadev.jakartavaxavailability.utils.compareToCurrentDateTime
+import com.wiryadev.jakartavaxavailability.utils.getMinutes
+import com.wiryadev.jakartavaxavailability.utils.toDate
 
 @Composable
 fun ItemRow(
@@ -31,6 +36,7 @@ fun ItemRow(
     ) {
         Column(
             modifier = modifier
+                .fillMaxWidth()
                 .background(
                     color = MaterialTheme.colors.background
                 )
@@ -39,14 +45,17 @@ fun ItemRow(
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Column {
+                val formattedDate = vaccineResponseItem.lastUpdatedAt.toDate()
+                val lastUpdated = formattedDate?.compareToCurrentDateTime()?.getMinutes()
+
                 Text(
                     text = vaccineResponseItem.namaLokasiVaksinasi,
                     style = MaterialTheme.typography.h4
                 )
                 Text(
-                    text = "Diperbarui pada ${vaccineResponseItem.lastUpdatedAt}",
+                    text = "Diperbarui $lastUpdated menit lalu",
                     style = MaterialTheme.typography.body1.copy(
-                        color = Color(0xFF4A5568)
+                        color = MaterialTheme.colors.onSecondary
                     )
                 )
             }
@@ -90,8 +99,8 @@ fun ItemDate(
             style = MaterialTheme.typography.h6,
             modifier = Modifier
                 .padding(
-                    vertical = 2.dp,
-                    horizontal = 8.dp
+                    vertical = 4.dp,
+                    horizontal = 12.dp
                 )
         )
     }
