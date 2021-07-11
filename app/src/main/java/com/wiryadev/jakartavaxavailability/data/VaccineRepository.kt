@@ -25,4 +25,30 @@ class VaccineRepository @Inject constructor(private val service: ApiService) {
         return cachedList
     }
 
+    fun searchFromList(query: String, searchType: SearchType): List<VaccineResponseItem> {
+        return when (searchType) {
+            SearchType.LOKASI -> searchBasedOnLokasi(query)
+            SearchType.KECAMATAN -> searchBasedOnKecamatan(query)
+            SearchType.KELURAHAN -> searchBasedOnKelurahan(query)
+        }
+    }
+
+    private fun searchBasedOnLokasi(query: String): List<VaccineResponseItem> {
+        return cachedList.filter { item ->
+            item.namaLokasiVaksinasi.contains(query, ignoreCase = true)
+        }
+    }
+
+    private fun searchBasedOnKecamatan(query: String): List<VaccineResponseItem> {
+        return cachedList.filter { item ->
+            item.kecamatan.contains(query, ignoreCase = true)
+        }
+    }
+
+    private fun searchBasedOnKelurahan(query: String): List<VaccineResponseItem> {
+        return cachedList.filter { item ->
+            item.kelurahan.contains(query, ignoreCase = true)
+        }
+    }
+
 }

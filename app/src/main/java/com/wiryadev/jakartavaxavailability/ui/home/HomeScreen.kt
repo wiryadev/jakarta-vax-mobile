@@ -1,29 +1,56 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.wiryadev.jakartavaxavailability.data.getSearchTypes
 import com.wiryadev.jakartavaxavailability.ui.components.ItemRow
+import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
 
+@ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(
     viewModel: MainViewModel
 ) {
-    val vaccines = viewModel.vaccines.value
     val loading = viewModel.loading.value
     val isRefreshing = viewModel.isRefreshing.value
 
-    Scaffold {
+    val query = viewModel.query.value
+    val selectedType = viewModel.searchType.value
+
+    val vaccines = viewModel.vaccines.value
+    val searchResult = viewModel.searchResult.value
+
+    Scaffold(
+        topBar = {
+            SearchAppBar(
+                query = query,
+                types = getSearchTypes(),
+                selectedType = selectedType,
+                onQueryChanged = {
+                    viewModel.onQueryChanged(it)
+                },
+                onSelectedTypeChanged = {
+                    viewModel.onSelectedTypeChanged(it)
+                }
+            )
+        }
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -34,22 +61,34 @@ fun HomeScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
             } else {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-                    onRefresh = { viewModel.refresh() },
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                if (query.isEmpty()) {
+                    SwipeRefresh(
+                        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                        onRefresh = { viewModel.refresh() },
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        LazyColumn(
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            itemsIndexed(
+                                items = vaccines
+                            ) { index, vaccine ->
+                                ItemRow(vaccineResponseItem = vaccine, onClick = {})
+                            }
+                        }
+                    }
+                } else {
                     LazyColumn(
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        itemsIndexed(
-                            items = vaccines
-                        ) { index, vaccine ->
+                        items(
+                            items = searchResult
+                        ) { vaccine ->
                             ItemRow(vaccineResponseItem = vaccine, onClick = {})
                         }
                     }
-                    
                 }
             }
         }
