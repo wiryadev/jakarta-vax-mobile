@@ -19,6 +19,8 @@ class MainViewModel @Inject constructor(
 
     val loading = mutableStateOf(false)
 
+    val isRefreshing = mutableStateOf(false)
+
     val vaccines: MutableState<List<VaccineResponseItem>> = mutableStateOf(listOf())
 
     var scrollPosition: Int = 0
@@ -28,17 +30,22 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getVaccines() {
-        loading.value = true
+        if (!isRefreshing.value) {
+            loading.value = true
+        }
 
         viewModelScope.launch {
-            vaccines.value = repository.getVaccines()
+            vaccines.value = repository.getVaccines(isRefreshing.value)
             loading.value = false
+            isRefreshing.value = false
         }
     }
 
-    private fun resetState() {
-        vaccines.value = listOf()
+    fun refresh() {
+        isRefreshing.value = true
         query.value = ""
+
+        getVaccines()
     }
 
     private fun setListScrollPosition(position: Int) {

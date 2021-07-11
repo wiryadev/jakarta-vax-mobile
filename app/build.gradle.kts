@@ -92,6 +92,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
-    // Image loading
-    implementation("com.google.accompanist:accompanist-coil:0.13.0")
+    // Accompanist
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.13.0")
 }

@@ -10,12 +10,18 @@ class VaccineRepository @Inject constructor(private val service: ApiService) {
 
     private var cachedList: List<VaccineResponseItem> = emptyList()
 
-    suspend fun getVaccines(): List<VaccineResponseItem> {
+    suspend fun getVaccines(isRefreshing: Boolean): List<VaccineResponseItem> {
         var cachedList = cachedList
+
+        if (isRefreshing) {
+            this.cachedList = emptyList()
+        }
+
         if (cachedList.isEmpty()) {
             cachedList = service.getVaccines()
             this.cachedList = cachedList
         }
+
         return cachedList
     }
 
