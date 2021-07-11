@@ -1,7 +1,7 @@
 package com.wiryadev.jakartavaxavailability.data
 
 enum class SearchType(val value: String) {
-    LOKASI("Lokasi"),
+    LOKASI("Nama Lokasi"),
     KECAMATAN("Kecamatan"),
     KELURAHAN("Kelurahan"),
 }

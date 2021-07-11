@@ -1,6 +1,5 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +7,9 @@ import com.wiryadev.jakartavaxavailability.data.SearchType
 import com.wiryadev.jakartavaxavailability.data.VaccineRepository
 import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,39 +21,50 @@ class MainViewModel @Inject constructor(
     val query = mutableStateOf("")
     val searchType = mutableStateOf(SearchType.LOKASI)
 
-    val loading = mutableStateOf(false)
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean>
+        get() = _loading.asStateFlow()
 
-    val isRefreshing = mutableStateOf(false)
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean>
+        get() = _isRefreshing.asStateFlow()
 
-    val vaccines: MutableState<List<VaccineResponseItem>> = mutableStateOf(listOf())
-    val searchResult: MutableState<List<VaccineResponseItem>> = mutableStateOf(listOf())
+    private val _vaccines = MutableStateFlow<List<VaccineResponseItem>>(listOf())
+    val vaccines: StateFlow<List<VaccineResponseItem>>
+        get() = _vaccines.asStateFlow()
 
-    var scrollPosition: Int = 0
+    private val _searchResult = MutableStateFlow<List<VaccineResponseItem>>(listOf())
+    val searchResult: StateFlow<List<VaccineResponseItem>>
+        get() = _searchResult.asStateFlow()
 
     init {
         getVaccines()
     }
 
     private fun getVaccines() {
-        if (!isRefreshing.value) {
-            loading.value = true
-        }
-
         viewModelScope.launch {
-            vaccines.value = repository.getVaccines(isRefreshing.value)
-            loading.value = false
-            isRefreshing.value = false
+            if (!_isRefreshing.value) {
+                _loading.value = true
+            }
+
+            _vaccines.emit(repository.getVaccines(_isRefreshing.value))
+            _loading.emit(false)
+            _isRefreshing.emit(false)
         }
     }
 
-    fun onQueryChanged(query: String) {
-        this.query.value = query
+    fun onQueryChanged(newQuery: String) {
+        query.value = newQuery
 
         if (this.query.value.isNotEmpty()) {
-            searchResult.value = repository.searchFromList(
-                query = this.query.value,
-                searchType = this.searchType.value,
-            )
+            viewModelScope.launch {
+                _searchResult.emit(
+                    repository.searchFromList(
+                        query = query.value,
+                        searchType = searchType.value,
+                    )
+                )
+            }
         }
     }
 
@@ -64,13 +77,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun refresh() {
-        isRefreshing.value = true
+        viewModelScope.launch {
+            _isRefreshing.emit(true)
+        }
         query.value = ""
 
         getVaccines()
     }
 
-    private fun setListScrollPosition(position: Int) {
-        scrollPosition = position
-    }
 }

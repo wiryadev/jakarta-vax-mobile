@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -30,7 +30,7 @@ fun ItemRow(
 ) {
     Card(
         elevation = 8.dp,
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(
             modifier = modifier
@@ -68,8 +68,8 @@ fun ItemRow(
                 )
             }
             LazyRow {
-                items(vaccineResponseItem.jadwal) { jadwal ->
-                    ItemDate(date = jadwal.id)
+                itemsIndexed(vaccineResponseItem.jadwal) { index, jadwal ->
+                    ItemDate(date = jadwal.id, index = index)
                 }
             }
         }
@@ -79,11 +79,16 @@ fun ItemRow(
 @Composable
 fun ItemDate(
     date: String,
+    index: Int,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
-            .padding(vertical = 8.dp, horizontal = 4.dp),
+            .padding(
+                top = 8.dp,
+                bottom = 8.dp,
+                start = if (index == 0) 0.dp else 8.dp
+            ),
         shape = RoundedCornerShape(8.dp),
         backgroundColor = MaterialTheme.colors.background,
         border = BorderStroke(

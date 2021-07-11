@@ -7,11 +7,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -27,14 +28,14 @@ import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
 fun HomeScreen(
     viewModel: MainViewModel
 ) {
-    val loading = viewModel.loading.value
-    val isRefreshing = viewModel.isRefreshing.value
-
     val query = viewModel.query.value
     val selectedType = viewModel.searchType.value
 
-    val vaccines = viewModel.vaccines.value
-    val searchResult = viewModel.searchResult.value
+    val loading by viewModel.loading.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    val vaccines by viewModel.vaccines.collectAsState()
+    val searchResult by viewModel.searchResult.collectAsState()
 
     Scaffold(
         topBar = {
@@ -71,9 +72,9 @@ fun HomeScreen(
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            itemsIndexed(
+                            items(
                                 items = vaccines
-                            ) { index, vaccine ->
+                            ) { vaccine ->
                                 ItemRow(vaccineResponseItem = vaccine, onClick = {})
                             }
                         }

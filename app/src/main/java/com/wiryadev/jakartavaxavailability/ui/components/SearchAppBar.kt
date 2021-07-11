@@ -118,7 +118,7 @@ fun SearchTypeChip(
             ),
             color = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(vertical = 8.dp)
                 .align(Alignment.Center),
         )
     }
