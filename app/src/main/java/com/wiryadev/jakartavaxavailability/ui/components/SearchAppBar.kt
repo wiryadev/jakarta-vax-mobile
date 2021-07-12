@@ -1,6 +1,7 @@
 package com.wiryadev.jakartavaxavailability.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,11 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.accompanist.insets.statusBarsHeight
 import com.wiryadev.jakartavaxavailability.data.SearchType
 
@@ -68,11 +70,13 @@ fun SearchAppBar(
                     onQueryChanged(it)
                 },
                 label = {
-                    Text(text = if (enabled) "Pencarian" else "Loading")
+                    Text(
+                        text = if (enabled) "Pencarian" else "Loading"
+                    )
                 },
                 placeholder = {
                     Text(
-                        text = "Cari kecamatan/kelurahan/nama lokasi vaksinasi",
+                        text = "Cari kecamatan/kelurahan/nama lokasi",
                         style = MaterialTheme.typography.caption,
                     )
                 },
@@ -87,6 +91,17 @@ fun SearchAppBar(
                 ),
                 leadingIcon = {
                     Icon(Icons.Rounded.Search, contentDescription = "Search Icon")
+                },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        Icon(
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = "Search Icon",
+                            modifier = Modifier.clickable {
+                                onQueryChanged("")
+                            }
+                        )
+                    }
                 },
                 textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                 colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
@@ -141,8 +156,8 @@ fun SearchTypeChip(
     ) {
         Text(
             text = type,
-            style = MaterialTheme.typography.h6.copy(
-                fontSize = 12.sp
+            style = MaterialTheme.typography.caption.copy(
+                fontWeight = FontWeight.SemiBold
             ),
             color = when {
                 isSelected -> MaterialTheme.colors.primary

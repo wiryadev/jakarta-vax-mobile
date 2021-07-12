@@ -40,7 +40,7 @@ fun ItemRow(
         Divider()
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Column {
                 val formattedDate = vaccineResponseItem.lastUpdatedAt.toDate()
@@ -48,23 +48,25 @@ fun ItemRow(
 
                 Text(
                     text = vaccineResponseItem.namaLokasiVaksinasi,
-                    style = MaterialTheme.typography.h4
+                    style = MaterialTheme.typography.h6,
                 )
                 Text(
                     text = "Diperbarui $lastUpdated menit lalu",
-                    style = MaterialTheme.typography.body2.copy(
+                    style = MaterialTheme.typography.subtitle2.copy(
                         color = MaterialTheme.colors.onSecondary
-                    )
+                    ),
                 )
             }
-            Column {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
                 Text(
                     text = "Kec/Kel: ${vaccineResponseItem.kecamatan.capitalizeWords()} / ${vaccineResponseItem.kelurahan.capitalizeWords()}",
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1,
                 )
                 Text(
                     text = vaccineResponseItem.wilayah.capitalizeWords(),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1,
                 )
             }
             LazyRow {
@@ -98,7 +100,7 @@ fun ItemDate(
         Text(
             text = date,
             color = MaterialTheme.colors.onBackground.copy(alpha = 0.9f),
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.overline,
             modifier = Modifier
                 .padding(
                     vertical = 4.dp,

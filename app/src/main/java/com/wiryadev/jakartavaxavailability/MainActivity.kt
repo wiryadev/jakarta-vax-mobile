@@ -85,7 +85,7 @@ fun OfflineDialog(onRetry: () -> Unit) {
             ) {
                 Text(
                     text = "Coba lagi",
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.button,
                 )
             }
         },
