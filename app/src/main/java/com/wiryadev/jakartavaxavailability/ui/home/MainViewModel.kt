@@ -29,25 +29,27 @@ class MainViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
 
-    private val _vaccines = MutableStateFlow<List<VaccineResponseItem>>(listOf())
-    val vaccines: StateFlow<List<VaccineResponseItem>>
-        get() = _vaccines.asStateFlow()
-
-    private val _searchResult = MutableStateFlow<List<VaccineResponseItem>>(listOf())
-    val searchResult: StateFlow<List<VaccineResponseItem>>
-        get() = _searchResult.asStateFlow()
+    private val _result = MutableStateFlow<List<VaccineResponseItem>>(listOf())
+    val result: StateFlow<List<VaccineResponseItem>>
+        get() = _result.asStateFlow()
 
     init {
         getVaccines()
     }
 
     private fun getVaccines() {
-        viewModelScope.launch {
-            if (!_isRefreshing.value) {
-                _loading.value = true
-            }
+        if (!_isRefreshing.value) {
+            _loading.value = true
+        }
 
-            _vaccines.emit(repository.getVaccines(_isRefreshing.value))
+        viewModelScope.launch {
+            _result.emit(
+                repository.getVaccines(
+                    isRefreshing = _isRefreshing.value,
+                    query = query.value,
+                    searchType = searchType.value
+                )
+            )
             _loading.emit(false)
             _isRefreshing.emit(false)
         }
@@ -56,15 +58,8 @@ class MainViewModel @Inject constructor(
     fun onQueryChanged(newQuery: String) {
         query.value = newQuery
 
-        if (this.query.value.isNotEmpty()) {
-            viewModelScope.launch {
-                _searchResult.emit(
-                    repository.searchFromList(
-                        query = query.value,
-                        searchType = searchType.value,
-                    )
-                )
-            }
+        if (query.value.isNotEmpty()) {
+            getVaccines()
         }
     }
 
@@ -80,7 +75,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             _isRefreshing.emit(true)
         }
-        query.value = ""
 
         getVaccines()
     }

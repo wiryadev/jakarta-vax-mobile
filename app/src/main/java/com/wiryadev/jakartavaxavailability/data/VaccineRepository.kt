@@ -10,22 +10,32 @@ class VaccineRepository @Inject constructor(private val service: ApiService) {
 
     private var cachedList: List<VaccineResponseItem> = emptyList()
 
-    suspend fun getVaccines(isRefreshing: Boolean): List<VaccineResponseItem> {
-        var cachedList = cachedList
+    suspend fun getVaccines(
+        isRefreshing: Boolean,
+        query: String,
+        searchType: SearchType,
+    ): List<VaccineResponseItem> {
 
         if (isRefreshing) {
             this.cachedList = emptyList()
         }
+
+        var cachedList = cachedList
 
         if (cachedList.isEmpty()) {
             cachedList = service.getVaccines()
             this.cachedList = cachedList
         }
 
-        return cachedList
+        return if (query.isEmpty()) {
+            cachedList
+        } else {
+            searchFromList(query = query, searchType = searchType)
+        }
+
     }
 
-    fun searchFromList(query: String, searchType: SearchType): List<VaccineResponseItem> {
+    private fun searchFromList(query: String, searchType: SearchType): List<VaccineResponseItem> {
         return when (searchType) {
             SearchType.LOKASI -> searchBasedOnLokasi(query)
             SearchType.KECAMATAN -> searchBasedOnKecamatan(query)

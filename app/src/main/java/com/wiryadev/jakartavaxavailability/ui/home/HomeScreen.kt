@@ -1,5 +1,6 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.wiryadev.jakartavaxavailability.data.getSearchTypes
 import com.wiryadev.jakartavaxavailability.ui.components.ItemRow
 import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
+import com.wiryadev.jakartavaxavailability.ui.components.VerticalList
 
 @ExperimentalComposeUiApi
 @Composable
@@ -34,12 +36,13 @@ fun HomeScreen(
     val loading by viewModel.loading.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    val vaccines by viewModel.vaccines.collectAsState()
-    val searchResult by viewModel.searchResult.collectAsState()
+    val result by viewModel.result.collectAsState()
+//    val searchResult by viewModel.searchResult.collectAsState()
 
     Scaffold(
         topBar = {
             SearchAppBar(
+                enabled = !(loading || isRefreshing),
                 query = query,
                 types = getSearchTypes(),
                 selectedType = selectedType,
@@ -57,39 +60,17 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.surface)
         ) {
-            if (loading && vaccines.isEmpty()) {
+            if (loading && result.isEmpty()) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
             } else {
-                if (query.isEmpty()) {
-                    SwipeRefresh(
-                        state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-                        onRefresh = { viewModel.refresh() },
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        LazyColumn(
-                            contentPadding = PaddingValues(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            items(
-                                items = vaccines
-                            ) { vaccine ->
-                                ItemRow(vaccineResponseItem = vaccine, onClick = {})
-                            }
-                        }
-                    }
-                } else {
-                    LazyColumn(
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(
-                            items = searchResult
-                        ) { vaccine ->
-                            ItemRow(vaccineResponseItem = vaccine, onClick = {})
-                        }
-                    }
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                    onRefresh = { viewModel.refresh() },
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    VerticalList(items = result, onItemClick = {})
                 }
             }
         }

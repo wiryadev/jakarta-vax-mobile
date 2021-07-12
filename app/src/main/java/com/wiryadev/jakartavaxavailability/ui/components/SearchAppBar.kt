@@ -26,6 +26,7 @@ import com.wiryadev.jakartavaxavailability.data.SearchType
 @ExperimentalComposeUiApi
 @Composable
 fun SearchAppBar(
+    enabled: Boolean,
     query: String,
     types: List<SearchType>,
     selectedType: SearchType,
@@ -44,13 +45,14 @@ fun SearchAppBar(
     ) {
         TextField(
             value = query,
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth(),
             onValueChange = {
                 onQueryChanged(it)
             },
             label = {
-                Text(text = "Pencarian")
+                Text(text = if (enabled) "Pencarian" else "Loading")
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
