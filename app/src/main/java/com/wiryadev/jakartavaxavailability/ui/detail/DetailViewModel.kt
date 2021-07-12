@@ -1,15 +1,11 @@
 package com.wiryadev.jakartavaxavailability.ui.detail
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.wiryadev.jakartavaxavailability.data.VaccineRepository
 import com.wiryadev.jakartavaxavailability.data.response.Jadwal
 import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +41,10 @@ class DetailViewModel @Inject constructor(
         get() = _selectedSchedules.asStateFlow()
 
     fun getDetailItem() {
+        if (!_isRefreshing.value) {
+            _loading.value = true
+        }
+
         if (locationName.value.isNotEmpty()) {
             viewModelScope.launch {
                 _vaccineResponseItem.emit(
@@ -55,8 +55,9 @@ class DetailViewModel @Inject constructor(
                     _schedules.emit(
                         it.jadwal
                     )
-                    Log.d("Detail", "VM schedule: ${_schedules.value}")
                 }
+                _loading.emit(false)
+                _isRefreshing.emit(false)
             }
         }
     }
@@ -65,6 +66,14 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             _selectedSchedules.emit(newSchedule)
         }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.emit(true)
+        }
+
+        getDetailItem()
     }
 
 }

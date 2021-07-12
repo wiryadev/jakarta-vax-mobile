@@ -24,7 +24,7 @@ import com.wiryadev.jakartavaxavailability.utils.getMinutes
 import com.wiryadev.jakartavaxavailability.utils.toDate
 
 @Composable
-fun ItemRow(
+fun ItemVaccineAvailability(
     vaccineResponseItem: VaccineResponseItem,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,

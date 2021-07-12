@@ -51,62 +51,52 @@ fun SearchAppBar(
             ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Column {
-            val appBarColor = MaterialTheme.colors.surface.copy(alpha = 0.87f)
-
-            Spacer(
-                modifier = Modifier
-                    .background(appBarColor)
-                    .fillMaxWidth()
-                    .statusBarsHeight()
-            )
-
-            TextField(
-                value = query,
-                enabled = enabled,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onValueChange = {
-                    onQueryChanged(it)
+        TextField(
+            value = query,
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth(),
+            onValueChange = {
+                onQueryChanged(it)
+            },
+            label = {
+                Text(
+                    text = if (enabled) "Pencarian" else "Loading"
+                )
+            },
+            placeholder = {
+                Text(
+                    text = "Cari kecamatan/kelurahan/nama lokasi",
+                    style = MaterialTheme.typography.caption,
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
                 },
-                label = {
-                    Text(
-                        text = if (enabled) "Pencarian" else "Loading"
+            ),
+            leadingIcon = {
+                Icon(Icons.Rounded.Search, contentDescription = "Search Icon")
+            },
+            trailingIcon = {
+                if (query.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Search Icon",
+                        modifier = Modifier.clickable {
+                            onQueryChanged("")
+                        }
                     )
-                },
-                placeholder = {
-                    Text(
-                        text = "Cari kecamatan/kelurahan/nama lokasi",
-                        style = MaterialTheme.typography.caption,
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                    },
-                ),
-                leadingIcon = {
-                    Icon(Icons.Rounded.Search, contentDescription = "Search Icon")
-                },
-                trailingIcon = {
-                    if (query.isNotEmpty()) {
-                        Icon(
-                            imageVector = Icons.Rounded.Close,
-                            contentDescription = "Search Icon",
-                            modifier = Modifier.clickable {
-                                onQueryChanged("")
-                            }
-                        )
-                    }
-                },
-                textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
-            )
-        }
+                }
+            },
+            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
+        )
+
 
         BoxWithConstraints {
             val width = (this.maxWidth - ((2 * 16).dp)) / 3

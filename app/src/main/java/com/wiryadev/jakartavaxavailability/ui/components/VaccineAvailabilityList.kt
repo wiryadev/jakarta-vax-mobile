@@ -21,7 +21,7 @@ fun VaccineAvailabilityList(
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         itemsIndexed(items = items) { index, item ->
-            ItemRow(vaccineResponseItem = item, onClick = onItemClick)
+            ItemVaccineAvailability(vaccineResponseItem = item, onClick = onItemClick)
 
             if (index == (items.size-1)) {
                 Spacer(modifier = Modifier.navigationBarsPadding())
