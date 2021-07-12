@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,18 +29,17 @@ fun ItemRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        elevation = 8.dp,
-        shape = RoundedCornerShape(12.dp)
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colors.surface
+            )
+            .clickable(onClick = onClick),
     ) {
+        Divider()
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colors.background
-                )
-                .clickable(onClick = onClick)
-                .padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Column {
@@ -52,7 +52,7 @@ fun ItemRow(
                 )
                 Text(
                     text = "Diperbarui $lastUpdated menit lalu",
-                    style = MaterialTheme.typography.body1.copy(
+                    style = MaterialTheme.typography.body2.copy(
                         color = MaterialTheme.colors.onSecondary
                     )
                 )
@@ -90,7 +90,6 @@ fun ItemDate(
                 start = if (index == 0) 0.dp else 8.dp
             ),
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = MaterialTheme.colors.background,
         border = BorderStroke(
             width = 1.dp,
             color = MaterialTheme.colors.onSurface
@@ -98,7 +97,7 @@ fun ItemDate(
     ) {
         Text(
             text = date,
-            color = MaterialTheme.colors.onBackground,
+            color = MaterialTheme.colors.onBackground.copy(alpha = 0.9f),
             style = MaterialTheme.typography.h6,
             modifier = Modifier
                 .padding(

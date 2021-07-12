@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.insets.statusBarsHeight
 import com.wiryadev.jakartavaxavailability.data.SearchType
 
 @ExperimentalComposeUiApi
@@ -41,41 +42,56 @@ fun SearchAppBar(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.surface)
-            .padding(16.dp),
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp,
+            ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        TextField(
-            value = query,
-            enabled = enabled,
-            modifier = Modifier
-                .fillMaxWidth(),
-            onValueChange = {
-                onQueryChanged(it)
-            },
-            label = {
-                Text(text = if (enabled) "Pencarian" else "Loading")
-            },
-            placeholder = {
-                Text(
-                    text = "Cari kecamatan/kelurahan/nama lokasi vaksinasi",
-                    style = MaterialTheme.typography.caption,
-                )
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
+        Column {
+            val appBarColor = MaterialTheme.colors.surface.copy(alpha = 0.87f)
+
+            Spacer(
+                modifier = Modifier
+                    .background(appBarColor)
+                    .fillMaxWidth()
+                    .statusBarsHeight()
+            )
+
+            TextField(
+                value = query,
+                enabled = enabled,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onValueChange = {
+                    onQueryChanged(it)
                 },
-            ),
-            leadingIcon = {
-                Icon(Icons.Rounded.Search, contentDescription = "Search Icon")
-            },
-            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
-        )
+                label = {
+                    Text(text = if (enabled) "Pencarian" else "Loading")
+                },
+                placeholder = {
+                    Text(
+                        text = "Cari kecamatan/kelurahan/nama lokasi vaksinasi",
+                        style = MaterialTheme.typography.caption,
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                    },
+                ),
+                leadingIcon = {
+                    Icon(Icons.Rounded.Search, contentDescription = "Search Icon")
+                },
+                textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
+            )
+        }
 
         BoxWithConstraints {
             val width = (this.maxWidth - ((2 * 16).dp)) / 3
@@ -109,7 +125,7 @@ fun SearchTypeChip(
     Box(
         modifier = Modifier
             .width(width = width)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(50f))
             .background(
                 when {
                     isSelected -> MaterialTheme.colors.primary.copy(alpha = 0.15f)

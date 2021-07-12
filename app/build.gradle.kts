@@ -94,4 +94,5 @@ dependencies {
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-swiperefresh:0.13.0")
+    implementation("com.google.accompanist:accompanist-insets:0.13.0")
 }

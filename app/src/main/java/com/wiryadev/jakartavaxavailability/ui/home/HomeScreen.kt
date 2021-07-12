@@ -30,7 +30,6 @@ fun HomeScreen(
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     val result by viewModel.result.collectAsState()
-//    val searchResult by viewModel.searchResult.collectAsState()
 
     Scaffold(
         topBar = {
