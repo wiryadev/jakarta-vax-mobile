@@ -34,7 +34,12 @@ val Typography = Typography(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
-    )
+    ),
+    caption = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
     /* Other default text styles to override
     button = TextStyle(
         fontFamily = FontFamily.Default,

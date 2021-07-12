@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -53,6 +54,12 @@ fun SearchAppBar(
             },
             label = {
                 Text(text = if (enabled) "Pencarian" else "Loading")
+            },
+            placeholder = {
+                Text(
+                    text = "Cari kecamatan/kelurahan/nama lokasi vaksinasi",
+                    style = MaterialTheme.typography.caption,
+                )
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -104,7 +111,10 @@ fun SearchTypeChip(
             .width(width = width)
             .clip(RoundedCornerShape(8.dp))
             .background(
-                if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.background
+                when {
+                    isSelected -> MaterialTheme.colors.primary.copy(alpha = 0.15f)
+                    else -> Color.Transparent
+                }
             )
             .toggleable(
                 value = isSelected,
@@ -118,7 +128,10 @@ fun SearchTypeChip(
             style = MaterialTheme.typography.h6.copy(
                 fontSize = 12.sp
             ),
-            color = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onBackground,
+            color = when {
+                isSelected -> MaterialTheme.colors.primary
+                else -> MaterialTheme.colors.onBackground
+            },
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .align(Alignment.Center),
