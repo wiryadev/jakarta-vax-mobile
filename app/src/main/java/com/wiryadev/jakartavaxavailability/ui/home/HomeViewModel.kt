@@ -58,9 +58,7 @@ class HomeViewModel @Inject constructor(
     fun onQueryChanged(newQuery: String) {
         query.value = newQuery
 
-        if (query.value.isNotEmpty()) {
-            getVaccines()
-        }
+        getVaccines()
     }
 
     fun onSelectedTypeChanged(type: String) {

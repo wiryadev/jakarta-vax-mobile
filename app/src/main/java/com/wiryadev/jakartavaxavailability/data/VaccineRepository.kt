@@ -35,6 +35,12 @@ class VaccineRepository @Inject constructor(private val service: ApiService) {
 
     }
 
+    suspend fun getVaccineById(id: Int): VaccineResponseItem {
+        return service.getVaccines().first { item ->
+            item.kodeLokasiVaksinasi == id
+        }
+    }
+
     private fun searchFromList(query: String, searchType: SearchType): List<VaccineResponseItem> {
         return when (searchType) {
             SearchType.LOKASI -> searchBasedOnLokasi(query)
