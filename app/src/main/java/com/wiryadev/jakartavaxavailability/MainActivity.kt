@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,16 +15,22 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.wiryadev.jakartavaxavailability.ui.detail.DetailScreen
+import com.wiryadev.jakartavaxavailability.ui.detail.DetailViewModel
 import com.wiryadev.jakartavaxavailability.ui.home.HomeScreen
 import com.wiryadev.jakartavaxavailability.ui.home.HomeViewModel
 import com.wiryadev.jakartavaxavailability.ui.theme.JakartaVaxAvailabilityTheme
@@ -97,18 +105,56 @@ fun OfflineDialog(onRetry: () -> Unit) {
 @Composable
 fun AppNavGraph(
     navController: NavHostController = rememberNavController(),
-    startDestination: String = MainDestinations.HOME_ROUTE
+    startDestination: String = MainNavigation.HOME_ROUTE
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = MainDestinations.HOME_ROUTE) {
+        composable(route = MainNavigation.HOME_ROUTE) { navBackStackEntry ->
             val viewModel = hiltViewModel<HomeViewModel>()
-            HomeScreen(viewModel = viewModel)
+            HomeScreen(
+                viewModel = viewModel,
+                onNavigationEvent = { locationId ->
+                    if (navBackStackEntry.lifecycleIsResumed()) {
+                        navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = "${MainNavigation.DETAIL_ROUTE}/{${MainNavigation.ArgsKey.DETAIL_LOCATION_ID}}",
+            arguments = listOf(
+                navArgument(
+                    name = MainNavigation.ArgsKey.DETAIL_LOCATION_ID,
+                    builder = {
+                        type = NavType.StringType
+                    }
+                )
+            )
+        ) { navBackStackEntry ->
+            val arguments = requireNotNull(navBackStackEntry.arguments)
+            val locationName = requireNotNull(arguments.getString(MainNavigation.ArgsKey.DETAIL_LOCATION_ID))
+
+            val viewModel = hiltViewModel<DetailViewModel>()
+
+            DetailScreen(
+                locationName = locationName,
+                viewModel = viewModel,
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }
 
-object MainDestinations {
+object MainNavigation {
     const val HOME_ROUTE = "home"
-    const val DETAIL_ROUTE = "vaccine"
-    const val ID_KEY = "vaccineId"
+    const val DETAIL_ROUTE = "detail"
+
+    object ArgsKey {
+        const val DETAIL_LOCATION_ID = "vaccineId"
+    }
 }
+
+private fun NavBackStackEntry.lifecycleIsResumed() =
+    this.lifecycle.currentState == Lifecycle.State.RESUMED

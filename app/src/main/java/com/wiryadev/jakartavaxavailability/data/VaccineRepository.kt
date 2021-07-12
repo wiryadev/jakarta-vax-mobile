@@ -35,9 +35,10 @@ class VaccineRepository @Inject constructor(private val service: ApiService) {
 
     }
 
-    suspend fun getVaccineById(id: Int): VaccineResponseItem {
+    suspend fun getLocationByName(name: String): VaccineResponseItem {
+        println(name)
         return service.getVaccines().first { item ->
-            item.kodeLokasiVaksinasi == id
+            item.namaLokasiVaksinasi == name
         }
     }
 

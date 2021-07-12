@@ -5,6 +5,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -38,6 +41,16 @@ fun JakartaVaxAvailabilityTheme(
         DarkColorPalette
     } else {
         LightColorPalette
+    }
+
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !darkTheme
+
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent,
+            darkIcons = useDarkIcons
+        )
     }
 
     MaterialTheme(

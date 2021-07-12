@@ -11,9 +11,9 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
 
 @Composable
-fun VerticalList(
+fun VaccineAvailabilityList(
     items: List<VaccineResponseItem>,
-    onItemClick: () -> Unit,
+    onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(

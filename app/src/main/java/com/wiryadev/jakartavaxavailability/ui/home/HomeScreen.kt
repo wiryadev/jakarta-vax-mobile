@@ -16,12 +16,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.wiryadev.jakartavaxavailability.data.getSearchTypes
 import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
-import com.wiryadev.jakartavaxavailability.ui.components.VerticalList
+import com.wiryadev.jakartavaxavailability.ui.components.VaccineAvailabilityList
 
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    onNavigationEvent: (String) -> Unit,
 ) {
     val query = viewModel.query.value
     val selectedType = viewModel.searchType.value
@@ -62,7 +63,7 @@ fun HomeScreen(
                     onRefresh = { viewModel.refresh() },
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    VerticalList(items = result, onItemClick = {})
+                    VaccineAvailabilityList(items = result, onItemClick = onNavigationEvent)
                 }
             }
         }

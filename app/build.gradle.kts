@@ -93,6 +93,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     // Accompanist
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.13.0")
-    implementation("com.google.accompanist:accompanist-insets:0.13.0")
+    val accompanistVersion = "0.13.0"
+    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 }

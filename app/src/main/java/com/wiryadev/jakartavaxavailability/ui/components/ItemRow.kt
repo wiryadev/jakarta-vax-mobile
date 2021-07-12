@@ -26,7 +26,7 @@ import com.wiryadev.jakartavaxavailability.utils.toDate
 @Composable
 fun ItemRow(
     vaccineResponseItem: VaccineResponseItem,
-    onClick: () -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -35,7 +35,9 @@ fun ItemRow(
             .background(
                 color = MaterialTheme.colors.surface
             )
-            .clickable(onClick = onClick),
+            .clickable(onClick = {
+                onClick(vaccineResponseItem.namaLokasiVaksinasi)
+            }),
     ) {
         Divider()
         Column(
