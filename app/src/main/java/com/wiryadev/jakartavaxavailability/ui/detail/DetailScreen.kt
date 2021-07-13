@@ -16,10 +16,7 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
-import com.wiryadev.jakartavaxavailability.ui.components.BackButton
-import com.wiryadev.jakartavaxavailability.ui.components.ScheduleTabs
-import com.wiryadev.jakartavaxavailability.ui.components.ScheduleTimeHeader
-import com.wiryadev.jakartavaxavailability.ui.components.ScheduleTimeItem
+import com.wiryadev.jakartavaxavailability.ui.components.*
 import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
 import com.wiryadev.jakartavaxavailability.utils.returnDashIfNullOrEmpty
 
@@ -34,6 +31,7 @@ fun DetailScreen(
 
     val loading by viewModel.loading.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val isError by viewModel.isError.collectAsState()
 
     val result by viewModel.vaccineResponseItem.collectAsState()
     val schedules by viewModel.schedules.collectAsState()
@@ -66,39 +64,46 @@ fun DetailScreen(
                     onRefresh = { viewModel.refresh() },
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        result?.let {
+                    if (isError) {
+                        ErrorScreen(
+                            onRetryClick = { viewModel.refresh() },
+                            modifier = Modifier.align(Alignment.Center),
+                        )
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            result?.let {
+                                item {
+                                    LocationInfo(
+                                        location = it,
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .padding(top = 16.dp)
+                                    )
+                                }
+                            }
+
                             item {
-                                LocationInfo(
-                                    location = it,
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                        .padding(top = 16.dp)
+                                ScheduleTabs(
+                                    schedules = schedules,
+                                    selectedSchedule = schedules[selectedScheduleIndex],
+                                    onScheduleSelected = viewModel::setSelectedSchedule
                                 )
                             }
-                        }
 
-                        item {
-                            ScheduleTabs(
-                                schedules = schedules,
-                                selectedSchedule = schedules[selectedScheduleIndex],
-                                onScheduleSelected = viewModel::setSelectedSchedule
-                            )
-                        }
+                            item {
+                                ScheduleTimeHeader()
+                            }
 
-                        item {
-                            ScheduleTimeHeader()
-                        }
+                            val selectedSchedule = schedules[selectedScheduleIndex].waktu
+                            itemsIndexed(selectedSchedule) { index, item ->
+                                ScheduleTimeItem(item = item)
 
-                        val selectedSchedule = schedules[selectedScheduleIndex].waktu
-                        itemsIndexed(selectedSchedule) { index, item ->
-                            ScheduleTimeItem(item = item)
-
-                            if (index == (selectedSchedule.size - 1)) {
-                                Spacer(modifier = Modifier.navigationBarsHeight())
+                                if (index == (selectedSchedule.size - 1)) {
+                                    Spacer(modifier = Modifier.navigationBarsHeight())
+                                }
                             }
                         }
                     }

@@ -28,6 +28,10 @@ class DetailViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
 
+    private val _isError = MutableStateFlow(false)
+    val isError: StateFlow<Boolean>
+        get() = _isError.asStateFlow()
+
     private val _vaccineResponseItem = MutableStateFlow<VaccineResponseItem?>(null)
     val vaccineResponseItem: StateFlow<VaccineResponseItem?>
         get() = _vaccineResponseItem.asStateFlow()
@@ -47,15 +51,22 @@ class DetailViewModel @Inject constructor(
 
         if (locationName.value.isNotEmpty()) {
             viewModelScope.launch {
-                _vaccineResponseItem.emit(
-                    repository.getLocationByName(locationName.value)
-                )
-
-                _vaccineResponseItem.value?.let {
-                    _schedules.emit(
-                        it.jadwal
+                try {
+                    _vaccineResponseItem.emit(
+                        repository.getLocationByName(locationName.value)
                     )
+
+                    _vaccineResponseItem.value?.let {
+                        _schedules.emit(
+                            it.jadwal
+                        )
+                    }
+
+                    _isError.emit(false)
+                } catch (e: Exception) {
+                    _isError.emit(true)
                 }
+
                 _loading.emit(false)
                 _isRefreshing.emit(false)
             }

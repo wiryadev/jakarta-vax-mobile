@@ -1,23 +1,22 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.wiryadev.jakartavaxavailability.R
 import com.wiryadev.jakartavaxavailability.data.getSearchTypes
-import com.wiryadev.jakartavaxavailability.ui.components.CustomButton
+import com.wiryadev.jakartavaxavailability.ui.components.ErrorScreen
 import com.wiryadev.jakartavaxavailability.ui.components.IllustrationWithText
 import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
 import com.wiryadev.jakartavaxavailability.ui.components.VaccineAvailabilityList
@@ -69,24 +68,10 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     if (isError) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 24.dp)
-                                .align(Alignment.Center),
-                            verticalArrangement = Arrangement.spacedBy(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-                            IllustrationWithText(
-                                imageId = R.drawable.ic_signal_searching,
-                                title = "Koneksi gagal",
-                                message = " Pastikan anda terhubung dengan jaringan yang stabil",
-                            )
-                            CustomButton(
-                                onClick = { viewModel.refresh() },
-                                text = "Coba Lagi",
-                            )
-                        }
+                        ErrorScreen(
+                            onRetryClick = { viewModel.refresh() },
+                            modifier = Modifier.align(Alignment.Center),
+                        )
                     } else if (result.isEmpty() && !isError) {
                         IllustrationWithText(
                             imageId = R.drawable.ic_empty_result,
