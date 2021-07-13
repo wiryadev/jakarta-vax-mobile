@@ -85,9 +85,9 @@ val Typography = Typography(
     button = TextStyle(
         fontFamily = Montserrat,
         fontSize = 14.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 16.sp,
-        letterSpacing = 1.25.sp
+        fontWeight = FontWeight.Bold,
+        lineHeight = 18.sp,
+        letterSpacing = 0.75.sp
     ),
     caption = TextStyle(
         fontFamily = Montserrat,

@@ -1,5 +1,6 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,10 @@ class HomeViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
 
+    private val _isError = MutableStateFlow(false)
+    val isError: StateFlow<Boolean>
+        get() = _isError.asStateFlow()
+
     private val _result = MutableStateFlow<List<VaccineResponseItem>>(listOf())
     val result: StateFlow<List<VaccineResponseItem>>
         get() = _result.asStateFlow()
@@ -43,13 +48,22 @@ class HomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _result.emit(
-                repository.getVaccines(
-                    isRefreshing = _isRefreshing.value,
-                    query = query.value,
-                    searchType = searchType.value
+            try {
+                _result.emit(
+                    repository.getVaccines(
+                        isRefreshing = _isRefreshing.value,
+                        query = query.value,
+                        searchType = searchType.value
+                    )
                 )
-            )
+
+                _isError.emit(false)
+            } catch (e: Exception) {
+                _isError.emit(true)
+            }
+
+            Log.d("Snackbar", "isError: ${isError.value}")
+
             _loading.emit(false)
             _isRefreshing.emit(false)
         }
