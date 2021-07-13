@@ -1,26 +1,28 @@
 package com.wiryadev.jakartavaxavailability.ui.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.wiryadev.jakartavaxavailability.data.response.Jadwal
+import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
+import com.wiryadev.jakartavaxavailability.ui.components.BackButton
 import com.wiryadev.jakartavaxavailability.ui.components.ScheduleTabs
 import com.wiryadev.jakartavaxavailability.ui.components.ScheduleTimeHeader
 import com.wiryadev.jakartavaxavailability.ui.components.ScheduleTimeItem
+import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
+import com.wiryadev.jakartavaxavailability.utils.returnDashIfNullOrEmpty
 
 @Composable
 fun DetailScreen(
@@ -38,7 +40,18 @@ fun DetailScreen(
     val schedules by viewModel.schedules.collectAsState()
     val selectedScheduleIndex by viewModel.selectedSchedules.collectAsState()
 
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = MaterialTheme.colors.surface
+            ) {
+                BackButton(
+                    onNavigateUp = onNavigateUp
+                )
+                Text(text = "Detail Lokasi Vaksinasi")
+            }
+        }
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -58,19 +71,36 @@ fun DetailScreen(
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
+                        result?.let {
+                            item {
+                                LocationInfo(
+                                    location = it,
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(top = 16.dp)
+                                )
+                            }
+                        }
+
                         item {
-                            Schedule(
+                            ScheduleTabs(
                                 schedules = schedules,
                                 selectedSchedule = schedules[selectedScheduleIndex],
                                 onScheduleSelected = viewModel::setSelectedSchedule
                             )
                         }
+
                         item {
                             ScheduleTimeHeader()
                         }
-
-                        items(schedules[selectedScheduleIndex].waktu) { item ->
+                        
+                        val selectedSchedule = schedules[selectedScheduleIndex].waktu
+                        itemsIndexed(selectedSchedule) { index, item ->
                             ScheduleTimeItem(item = item)
+                            
+                            if (index == (selectedSchedule.size-1)) {
+                                Spacer(modifier = Modifier.navigationBarsHeight())
+                            }
                         }
                     }
                 }
@@ -80,32 +110,69 @@ fun DetailScreen(
 }
 
 @Composable
-fun Schedule(
-    schedules: List<Jadwal>,
-    selectedSchedule: Jadwal,
-    onScheduleSelected: (Int) -> Unit,
+fun LocationInfo(
+    location: VaccineResponseItem,
+    modifier: Modifier = Modifier,
+) {
+    val faskes = location.jenisFaskes.returnDashIfNullOrEmpty()
+
+    val alamat = location.alamatLokasiVaksinasi.returnDashIfNullOrEmpty()
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            text = location.namaLokasiVaksinasi,
+            style = MaterialTheme.typography.h5,
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Row {
+                DetailProperty(
+                    propertyName = "Kecamatan",
+                    propertyValue = location.kecamatan.capitalizeWords(),
+                    modifier = Modifier.weight(1f),
+                )
+                DetailProperty(
+                    propertyName = "Kelurahan",
+                    propertyValue = location.kelurahan.capitalizeWords(),
+                    modifier = Modifier.weight(1f),
+                )
+            }
+            DetailProperty(
+                propertyName = "Wilayah",
+                propertyValue = location.wilayah.capitalizeWords(),
+            )
+            DetailProperty(
+                propertyName = "Jenis Faskes",
+                propertyValue = faskes,
+            )
+            DetailProperty(
+                propertyName = "Alamat",
+                propertyValue = alamat,
+            )
+        }
+    }
+}
+
+@Composable
+fun DetailProperty(
+    propertyName: String,
+    propertyValue: String,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        ScheduleTabs(
-            schedules = schedules,
-            selectedSchedule = selectedSchedule,
-            onScheduleSelected = onScheduleSelected,
-            modifier = Modifier.fillMaxWidth()
+        Text(
+            text = propertyName,
+            style = MaterialTheme.typography.body2,
         )
-
-//        Crossfade(
-//            targetState = selectedCategory,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .weight(1f)
-//        ) { category ->
-//
-//            PodcastCategory(
-//                categoryId = category.id,
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            )
-//        }
+        Text(
+            text = propertyValue,
+            style = MaterialTheme.typography.body1.copy(
+                fontWeight = FontWeight.Normal,
+            ),
+        )
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class VaccineResponseItem(
     @SerializedName("alamat_lokasi_vaksinasi")
-    val alamatLokasiVaksinasi: String,
+    val alamatLokasiVaksinasi: String?,
     @SerializedName("created_at")
     val createdAt: String,
     @SerializedName("detail_lokasi")
@@ -13,7 +13,7 @@ data class VaccineResponseItem(
     @SerializedName("jadwal")
     val jadwal: List<Jadwal>,
     @SerializedName("jenis_faskes")
-    val jenisFaskes: String,
+    val jenisFaskes: String?,
     @SerializedName("jumlah_tim_vaksinator")
     val jumlahTimVaksinator: Int,
     @SerializedName("kecamatan")
@@ -21,7 +21,7 @@ data class VaccineResponseItem(
     @SerializedName("kelurahan")
     val kelurahan: String,
     @SerializedName("kode_lokasi_vaksinasi")
-    val kodeLokasiVaksinasi: Int,
+    val kodeLokasiVaksinasi: Int?,
     @SerializedName("kodepos")
     val kodepos: String,
     @SerializedName("last_updated_at")

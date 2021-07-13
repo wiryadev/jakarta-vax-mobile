@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.navigationBarsHeight
 import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
 
 @Composable
@@ -24,7 +24,7 @@ fun VaccineAvailabilityList(
             ItemVaccineAvailability(vaccineResponseItem = item, onClick = onItemClick)
 
             if (index == (items.size-1)) {
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                Spacer(modifier = Modifier.navigationBarsHeight())
             }
         }
     }

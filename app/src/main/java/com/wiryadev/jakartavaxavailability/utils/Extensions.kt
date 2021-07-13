@@ -36,3 +36,15 @@ fun Date.compareToCurrentDateTime(): Long {
 fun Long.getMinutes(): Int {
     return TimeUnit.MILLISECONDS.toMinutes(this).toInt()
 }
+
+/** Check if given string is null or empty
+ *  if so, return long dash
+ *  otherwise, return itself
+ */
+fun CharSequence?.returnDashIfNullOrEmpty(): String {
+    return if (!this.isNullOrEmpty()) {
+        this.toString()
+    } else {
+        "—"
+    }
+}

@@ -6,14 +6,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -26,6 +28,7 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.statusBarsHeight
+import com.wiryadev.jakartavaxavailability.ui.components.OfflineDialog
 import com.wiryadev.jakartavaxavailability.ui.detail.DetailScreen
 import com.wiryadev.jakartavaxavailability.ui.detail.DetailViewModel
 import com.wiryadev.jakartavaxavailability.ui.home.HomeScreen
@@ -77,36 +80,6 @@ private fun checkIfOnline(context: Context): Boolean {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = cm.activeNetworkInfo
     return activeNetwork?.isConnectedOrConnecting == true
-}
-
-@Composable
-fun OfflineDialog(onRetry: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(text = "Koneksi Gagal") },
-        text = { Text(text = "Pastikan jaringan kamu berjalan dengan baik ya") },
-        confirmButton = {
-            Button(
-                onClick = onRetry,
-                shape = RoundedCornerShape(50),
-                contentPadding = PaddingValues(
-                    vertical = 8.dp,
-                    horizontal = 24.dp,
-                ),
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp,
-                ),
-            ) {
-                Text(
-                    text = "Coba lagi",
-                    style = MaterialTheme.typography.button,
-                )
-            }
-        },
-        modifier = Modifier.padding(16.dp)
-    )
 }
 
 @ExperimentalComposeUiApi
