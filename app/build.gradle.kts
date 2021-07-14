@@ -77,15 +77,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.1")
 
     // Hilt
-    implementation("com.google.dagger:dagger:2.37")
-    kapt("com.google.dagger:dagger-compiler:2.37")
-    api("com.google.dagger:dagger-android:2.37")
-    api("com.google.dagger:dagger-android-support:2.37")
-    kapt("com.google.dagger:dagger-android-processor:2.37")
-    implementation("com.google.dagger:hilt-android:2.37")
-    kapt("com.google.dagger:hilt-android-compiler:2.37")
-
-    kapt("com.google.dagger:hilt-compiler:2.37")
+    val hiltVersion = "2.37"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
 
     // Navigation

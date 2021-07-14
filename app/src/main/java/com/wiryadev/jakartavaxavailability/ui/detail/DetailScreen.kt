@@ -1,5 +1,6 @@
 package com.wiryadev.jakartavaxavailability.ui.detail
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -105,10 +106,12 @@ fun DetailScreen(
 
                             val selectedSchedule = schedules[selectedScheduleIndex].waktu
                             itemsIndexed(selectedSchedule) { index, item ->
-                                ScheduleTimeItem(item = item)
+                                Crossfade(targetState = item) {
+                                    ScheduleTimeItem(item = it)
 
-                                if (index == (selectedSchedule.size - 1)) {
-                                    Spacer(modifier = Modifier.navigationBarsHeight())
+                                    if (index == (selectedSchedule.size - 1)) {
+                                        Spacer(modifier = Modifier.navigationBarsHeight())
+                                    }
                                 }
                             }
                         }
