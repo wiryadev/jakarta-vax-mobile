@@ -1,5 +1,6 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +35,7 @@ fun HomeScreen(
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val isError by viewModel.isError.collectAsState()
 
-    val result by viewModel.result.collectAsState()
+    val results by viewModel.result.collectAsState()
 
     Scaffold(
         topBar = {
@@ -57,7 +58,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.surface)
         ) {
-            if (loading && result.isEmpty()) {
+            if (loading && results.isEmpty()) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -72,7 +73,7 @@ fun HomeScreen(
                             onRetryClick = { viewModel.refresh() },
                             modifier = Modifier.align(Alignment.Center),
                         )
-                    } else if (result.isEmpty() && !isError) {
+                    } else if (results.isEmpty() && !isError) {
                         IllustrationWithText(
                             imageId = R.drawable.ic_empty_result,
                             title = "Data tidak ditemukan",
@@ -80,7 +81,9 @@ fun HomeScreen(
                             modifier = Modifier.align(Alignment.Center)
                         )
                     } else {
-                        VaccineAvailabilityList(items = result, onItemClick = onNavigationEvent)
+                        Crossfade(targetState = results) { target ->
+                            VaccineAvailabilityList(items = target, onItemClick = onNavigationEvent)
+                        }
                     }
                 }
             }

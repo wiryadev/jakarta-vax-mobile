@@ -7,9 +7,9 @@ data class VaccineResponseItem(
     @SerializedName("alamat_lokasi_vaksinasi")
     val alamatLokasiVaksinasi: String?,
     @SerializedName("created_at")
-    val createdAt: String,
+    val createdAt: String?,
     @SerializedName("detail_lokasi")
-    val detailLokasi: List<DetailLokasi>,
+    val detailLokasi: List<DetailLokasi>?,
     @SerializedName("jadwal")
     val jadwal: List<Jadwal>,
     @SerializedName("jenis_faskes")
@@ -23,25 +23,25 @@ data class VaccineResponseItem(
     @SerializedName("kode_lokasi_vaksinasi")
     val kodeLokasiVaksinasi: Int?,
     @SerializedName("kodepos")
-    val kodepos: String,
+    val kodepos: String?,
     @SerializedName("last_updated_at")
     val lastUpdatedAt: String,
     @SerializedName("nama_faskes")
-    val namaFaskes: String,
+    val namaFaskes: String?,
     @SerializedName("nama_lokasi_vaksinasi")
     val namaLokasiVaksinasi: String,
     @SerializedName("open_regis")
-    val openRegis: String,
+    val openRegis: String?,
     @SerializedName("pcare")
-    val pcare: Boolean,
+    val pcare: Boolean?,
     @SerializedName("referral_code")
-    val referralCode: Any,
+    val referralCode: Any?,
     @SerializedName("rt")
-    val rt: String,
+    val rt: String?,
     @SerializedName("rw")
-    val rw: String,
+    val rw: String?,
     @SerializedName("updated_at")
-    val updatedAt: String,
+    val updatedAt: String?,
     @SerializedName("wilayah")
     val wilayah: String
 )
