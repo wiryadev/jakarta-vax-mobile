@@ -1,6 +1,6 @@
 package com.wiryadev.jakartavaxavailability.data.network
 
-import com.wiryadev.jakartavaxavailability.data.response.VaccineResponse
+import com.wiryadev.jakartavaxavailability.data.response.VaccineResponses
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,5 +10,5 @@ class ApiService @Inject constructor(private val endpoint: Endpoint) {
         const val BASE_URL = "https://vaksin-jakarta.yggdrasil.id/"
     }
 
-    suspend fun getVaccines(): VaccineResponse = endpoint.getVaccines()
+    suspend fun getVaccines(): VaccineResponses = endpoint.getVaccines()
 }

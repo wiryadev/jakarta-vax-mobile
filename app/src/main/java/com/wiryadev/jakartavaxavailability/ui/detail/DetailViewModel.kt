@@ -1,5 +1,6 @@
 package com.wiryadev.jakartavaxavailability.ui.detail
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -16,6 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Given context is appContext, no actual leak
+@SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val context: Context,
@@ -57,7 +60,10 @@ class DetailViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     _vaccineResponseItem.emit(
-                        repository.getLocationByName(locationName.value)
+                        repository.getLocationByName(
+                            name = locationName.value,
+                            isRefreshing = _isRefreshing.value,
+                        )
                     )
 
                     _vaccineResponseItem.value?.let {

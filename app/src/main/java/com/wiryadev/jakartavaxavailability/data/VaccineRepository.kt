@@ -35,9 +35,9 @@ class VaccineRepository @Inject constructor(private val service: ApiService) {
 
     }
 
-    suspend fun getLocationByName(name: String): VaccineResponseItem {
-        println(name)
-        return service.getVaccines().first { item ->
+    suspend fun getLocationByName(name: String, isRefreshing: Boolean): VaccineResponseItem {
+        val list = if (!isRefreshing) cachedList else service.getVaccines()
+        return list.first { item ->
             item.namaLokasiVaksinasi == name
         }
     }

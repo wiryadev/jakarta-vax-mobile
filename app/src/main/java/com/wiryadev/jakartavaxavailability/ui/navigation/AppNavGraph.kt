@@ -1,6 +1,12 @@
 package com.wiryadev.jakartavaxavailability.ui.navigation
 
-import androidx.compose.runtime.Composable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -16,20 +22,25 @@ import com.wiryadev.jakartavaxavailability.ui.detail.DetailViewModel
 import com.wiryadev.jakartavaxavailability.ui.home.HomeScreen
 import com.wiryadev.jakartavaxavailability.ui.home.HomeViewModel
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
 fun AppNavGraph(
     navController: NavHostController = rememberNavController(),
     startDestination: String = MainNavigation.HOME_ROUTE
 ) {
+    var detailScreenIsVisible by remember { mutableStateOf(false) }
+
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = MainNavigation.HOME_ROUTE) { navBackStackEntry ->
+            detailScreenIsVisible = false
             val viewModel = hiltViewModel<HomeViewModel>()
             HomeScreen(
                 viewModel = viewModel,
                 onNavigationEvent = { locationId ->
                     if (navBackStackEntry.lifecycleIsResumed()) {
                         navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
+                        detailScreenIsVisible = true
                     }
                 }
             )
@@ -52,13 +63,22 @@ fun AppNavGraph(
 
             val viewModel = hiltViewModel<DetailViewModel>()
 
-            DetailScreen(
-                locationName = locationName,
-                viewModel = viewModel,
-                onNavigateUp = {
-                    navController.navigateUp()
-                }
-            )
+            AnimatedVisibility(
+                visibleState = remember { MutableTransitionState(!detailScreenIsVisible) }
+                    .apply { targetState = detailScreenIsVisible },
+                enter = fadeIn(
+                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                ),
+            ) {
+                DetailScreen(
+                    locationName = locationName,
+                    viewModel = viewModel,
+                    onNavigateUp = {
+                        detailScreenIsVisible = false
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
     }
 }
