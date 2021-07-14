@@ -1,5 +1,8 @@
 package com.wiryadev.jakartavaxavailability.ui.detail
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val repository: VaccineRepository
+    private val context: Context,
+    private val repository: VaccineRepository,
 ) : ViewModel() {
 
     val locationName = mutableStateOf("")
@@ -85,6 +89,14 @@ class DetailViewModel @Inject constructor(
         }
 
         getDetailItem()
+    }
+
+    fun goToMaps() {
+        val gmmIntentUri = Uri.parse("geo:0,0?q=${vaccineResponseItem.value?.namaLokasiVaksinasi}")
+        val intent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        intent.setPackage("com.google.android.apps.maps")
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
     }
 
 }

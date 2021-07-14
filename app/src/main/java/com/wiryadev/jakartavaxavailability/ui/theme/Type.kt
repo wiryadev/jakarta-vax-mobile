@@ -87,7 +87,7 @@ val Typography = Typography(
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         lineHeight = 18.sp,
-        letterSpacing = 0.75.sp
+        letterSpacing = 0.5.sp
     ),
     caption = TextStyle(
         fontFamily = Montserrat,
