@@ -1,71 +1,57 @@
 package com.wiryadev.jakartavaxavailability.data
 
-import com.wiryadev.jakartavaxavailability.data.network.ApiService
-import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
+import android.util.Log
+import com.wiryadev.jakartavaxavailability.data.local.LocalDataSource
+import com.wiryadev.jakartavaxavailability.data.local.entity.VaccineBookmarkEntity
+import com.wiryadev.jakartavaxavailability.data.remote.RemoteDataSource
+import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
+import com.wiryadev.jakartavaxavailability.ui.home.SearchType
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VaccineRepository @Inject constructor(private val service: ApiService) {
-
-    private var cachedList: List<VaccineResponseItem> = emptyList()
+class VaccineRepository @Inject constructor(
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+) {
 
     suspend fun getVaccines(
         isRefreshing: Boolean,
         query: String,
         searchType: SearchType,
     ): List<VaccineResponseItem> {
-
-        if (isRefreshing) {
-            this.cachedList = emptyList()
+        return try {
+            remoteDataSource.getVaccines(
+                isRefreshing = isRefreshing,
+                query = query,
+                searchType = searchType
+            )
+        } catch (e: Exception) {
+            Log.d("Exception", "${e.message}")
+            emptyList()
         }
-
-        var cachedList = cachedList
-
-        if (cachedList.isEmpty()) {
-            cachedList = service.getVaccines()
-            this.cachedList = cachedList
-        }
-
-        return if (query.isEmpty()) {
-            cachedList
-        } else {
-            searchFromList(query = query, searchType = searchType)
-        }
-
     }
 
     suspend fun getLocationByName(name: String, isRefreshing: Boolean): VaccineResponseItem {
-        val list = if (!isRefreshing) cachedList else service.getVaccines()
-        return list.first { item ->
-            item.namaLokasiVaksinasi == name
-        }
+        return remoteDataSource.getLocationByName(
+            name = name,
+            isRefreshing = isRefreshing,
+        )
     }
 
-    private fun searchFromList(query: String, searchType: SearchType): List<VaccineResponseItem> {
-        return when (searchType) {
-            SearchType.LOKASI -> searchBasedOnLokasi(query)
-            SearchType.KECAMATAN -> searchBasedOnKecamatan(query)
-            SearchType.KELURAHAN -> searchBasedOnKelurahan(query)
-        }
+    fun getBookmarkList(): Flow<List<VaccineBookmarkEntity>> {
+        return localDataSource.getBookmarkList()
     }
 
-    private fun searchBasedOnLokasi(query: String): List<VaccineResponseItem> {
-        return cachedList.filter { item ->
-            item.namaLokasiVaksinasi.contains(query, ignoreCase = true)
-        }
+    fun checkBookmark(query: String): Flow<Int> = localDataSource.checkBookmark(query = query)
+
+    suspend fun addToBookmark(entity: VaccineBookmarkEntity) {
+        localDataSource.addToBookmark(entity = entity)
     }
 
-    private fun searchBasedOnKecamatan(query: String): List<VaccineResponseItem> {
-        return cachedList.filter { item ->
-            item.kecamatan.contains(query, ignoreCase = true)
-        }
-    }
-
-    private fun searchBasedOnKelurahan(query: String): List<VaccineResponseItem> {
-        return cachedList.filter { item ->
-            item.kelurahan.contains(query, ignoreCase = true)
-        }
+    suspend fun removeFromBookmark(entity: VaccineBookmarkEntity) {
+        localDataSource.removeFromBookmark(entity = entity)
     }
 
 }

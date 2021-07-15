@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.wiryadev.jakartavaxavailability.R
-import com.wiryadev.jakartavaxavailability.data.getSearchTypes
 import com.wiryadev.jakartavaxavailability.ui.components.ErrorScreen
 import com.wiryadev.jakartavaxavailability.ui.components.IllustrationWithText
 import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
@@ -26,7 +25,8 @@ import com.wiryadev.jakartavaxavailability.ui.components.VaccineAvailabilityList
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    onNavigationEvent: (String) -> Unit,
+    onNavigationBookmark: () -> Unit,
+    onNavigationDetail: (String) -> Unit,
 ) {
     val query = viewModel.query.value
     val selectedType = viewModel.searchType.value
@@ -49,7 +49,8 @@ fun HomeScreen(
                 },
                 onSelectedTypeChanged = {
                     viewModel.onSelectedTypeChanged(it)
-                }
+                },
+                onBookmarkClicked = onNavigationBookmark,
             )
         }
     ) {
@@ -78,11 +79,11 @@ fun HomeScreen(
                             imageId = R.drawable.ic_empty_result,
                             title = "Data tidak ditemukan",
                             message = "Cobalah dengan kata kunci lain",
-                            modifier = Modifier.align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center),
                         )
                     } else {
                         Crossfade(targetState = results) { target ->
-                            VaccineAvailabilityList(items = target, onItemClick = onNavigationEvent)
+                            VaccineAvailabilityList(items = target, onItemClick = onNavigationDetail)
                         }
                     }
                 }

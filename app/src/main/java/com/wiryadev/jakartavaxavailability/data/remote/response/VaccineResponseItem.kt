@@ -1,4 +1,4 @@
-package com.wiryadev.jakartavaxavailability.data.response
+package com.wiryadev.jakartavaxavailability.data.remote.response
 
 
 import com.google.gson.annotations.SerializedName

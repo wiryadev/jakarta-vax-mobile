@@ -8,12 +8,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wiryadev.jakartavaxavailability.data.VaccineRepository
-import com.wiryadev.jakartavaxavailability.data.response.Jadwal
-import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
+import com.wiryadev.jakartavaxavailability.data.local.entity.VaccineBookmarkEntity
+import com.wiryadev.jakartavaxavailability.data.remote.response.Jadwal
+import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,6 +52,10 @@ class DetailViewModel @Inject constructor(
     private val _selectedSchedules = MutableStateFlow(0)
     val selectedSchedules: StateFlow<Int>
         get() = _selectedSchedules.asStateFlow()
+
+    private val _isBookmarked = MutableStateFlow(false)
+    val isBookmarked: StateFlow<Boolean>
+        get() = _isBookmarked.asStateFlow()
 
     fun getDetailItem() {
         if (!_isRefreshing.value) {
@@ -95,6 +101,31 @@ class DetailViewModel @Inject constructor(
         }
 
         getDetailItem()
+//        checkBookmark()
+    }
+
+    fun checkBookmark() = viewModelScope.launch {
+        repository.checkBookmark(query = locationName.value).collect {
+            if (it >= 1) {
+                _isBookmarked.emit(true)
+            } else {
+                _isBookmarked.emit(false)
+            }
+        }
+    }
+
+    fun addToBookmark(entity: VaccineBookmarkEntity) {
+        viewModelScope.launch {
+            repository.addToBookmark(entity = entity)
+        }
+//        checkBookmark()
+    }
+
+    fun removeFromBookmark(entity: VaccineBookmarkEntity) {
+        viewModelScope.launch {
+            repository.removeFromBookmark(entity = entity)
+        }
+        checkBookmark()
     }
 
     fun goToMaps() {

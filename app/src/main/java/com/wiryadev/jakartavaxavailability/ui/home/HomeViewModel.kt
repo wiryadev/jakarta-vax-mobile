@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wiryadev.jakartavaxavailability.data.SearchType
 import com.wiryadev.jakartavaxavailability.data.VaccineRepository
-import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
+import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,10 +61,10 @@ class HomeViewModel @Inject constructor(
                 _isError.emit(true)
             }
 
-            Log.d("Snackbar", "isError: ${isError.value}")
-
             _loading.emit(false)
             _isRefreshing.emit(false)
+
+            Log.d("Home", "isError: ${isError.value}")
         }
     }
 

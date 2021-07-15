@@ -1,4 +1,4 @@
-package com.wiryadev.jakartavaxavailability.data
+package com.wiryadev.jakartavaxavailability.ui.home
 
 enum class SearchType(val value: String) {
     LOKASI("Nama Lokasi"),

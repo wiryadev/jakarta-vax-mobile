@@ -9,8 +9,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.outlined.CollectionsBookmark
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.wiryadev.jakartavaxavailability.data.SearchType
+import com.wiryadev.jakartavaxavailability.ui.home.SearchType
 
 @ExperimentalComposeUiApi
 @Composable
@@ -35,6 +35,7 @@ fun SearchAppBar(
     selectedType: SearchType,
     onQueryChanged: (String) -> Unit,
     onSelectedTypeChanged: (String) -> Unit,
+    onBookmarkClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -48,53 +49,82 @@ fun SearchAppBar(
                 end = 16.dp,
                 bottom = 16.dp,
             ),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        TextField(
-            value = query,
-            enabled = enabled,
-            modifier = Modifier
-                .fillMaxWidth(),
-            onValueChange = {
-                onQueryChanged(it)
-            },
-            label = {
-                Text(
-                    text = if (enabled) "Pencarian" else "Loading"
-                )
-            },
-            placeholder = {
-                Text(
-                    text = "Cari kecamatan/kelurahan/nama lokasi",
-                    style = MaterialTheme.typography.caption,
-                )
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                },
-            ),
-            leadingIcon = {
-                Icon(Icons.Rounded.Search, contentDescription = "Search Icon")
-            },
-            trailingIcon = {
-                if (query.isNotEmpty()) {
-                    Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = "Search Icon",
-                        modifier = Modifier.clickable {
-                            onQueryChanged("")
+        BoxWithConstraints {
+            val textFieldWidth = this.maxWidth - (48.dp + 8.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                OutlinedTextField(
+                    value = query,
+                    enabled = enabled,
+                    modifier = Modifier.width(textFieldWidth),
+                    onValueChange = {
+                        onQueryChanged(it)
+                    },
+                    label = {
+                        Text(
+                            text = if (enabled) "Pencarian" else "Loading"
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Cari ${selectedType.value}...",
+                            style = MaterialTheme.typography.caption,
+                        )
+                    },
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        },
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Rounded.Search,
+                            contentDescription = "Search Icon",
+                        )
+                    },
+                    trailingIcon = {
+                        if (query.isNotEmpty()) {
+                            Icon(
+                                imageVector = Icons.Rounded.Close,
+                                contentDescription = "Search Icon",
+                                modifier = Modifier.clickable {
+                                    onQueryChanged("")
+                                }
+                            )
                         }
+                    },
+                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.surface,
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                )
+
+                IconButton(
+                    onClick = {
+                        if (enabled) onBookmarkClicked()
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.CollectionsBookmark,
+                        contentDescription = "Go To Bookmark Screen",
+                        tint = if (enabled) LocalContentColor.current else {
+                            LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+                        },
                     )
                 }
-            },
-            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
-        )
+            }
+        }
 
 
         BoxWithConstraints {

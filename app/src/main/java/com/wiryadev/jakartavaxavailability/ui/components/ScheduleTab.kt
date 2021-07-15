@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.wiryadev.jakartavaxavailability.data.response.Jadwal
+import com.wiryadev.jakartavaxavailability.data.remote.response.Jadwal
 
 private val emptyTabIndicator: @Composable (List<TabPosition>) -> Unit = {}
 

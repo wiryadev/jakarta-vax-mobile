@@ -1,11 +1,15 @@
 package com.wiryadev.jakartavaxavailability.ui.detail
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.runtime.Composable
@@ -19,11 +23,12 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
+import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
 import com.wiryadev.jakartavaxavailability.ui.components.*
 import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
 import com.wiryadev.jakartavaxavailability.utils.returnDashIfNullOrEmpty
 
+@ExperimentalAnimationApi
 @Composable
 fun DetailScreen(
     locationName: String,
@@ -32,6 +37,7 @@ fun DetailScreen(
 ) {
     viewModel.locationName.value = locationName
     viewModel.getDetailItem()
+    viewModel.checkBookmark()
 
     val loading by viewModel.loading.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
@@ -40,23 +46,29 @@ fun DetailScreen(
     val result by viewModel.vaccineResponseItem.collectAsState()
     val schedules by viewModel.schedules.collectAsState()
     val selectedScheduleIndex by viewModel.selectedSchedules.collectAsState()
+    val isBookmarked by viewModel.isBookmarked.collectAsState()
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                backgroundColor = MaterialTheme.colors.surface
-            ) {
-                BackButton(
-                    onNavigateUp = onNavigateUp
+            result?.let { item ->
+                DetailAppBar(
+                    result = item,
+                    isBookmarked = isBookmarked,
+                    onAddBookmark = { entity ->
+                        viewModel.addToBookmark(entity)
+                    },
+                    onRemoveBookmark = { entity ->
+                        viewModel.removeFromBookmark(entity)
+                    },
+                    onNavigateUp = onNavigateUp,
                 )
-                Text(text = "Detail Lokasi Vaksinasi")
             }
         }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.surface),
         ) {
             if (loading && schedules.isEmpty()) {
                 CircularProgressIndicator(
@@ -76,7 +88,7 @@ fun DetailScreen(
                     } else {
                         LazyColumn(
                             modifier = Modifier
-                                .fillMaxSize()
+                                .fillMaxSize(),
                         ) {
                             result?.let {
                                 item {
@@ -105,14 +117,14 @@ fun DetailScreen(
                             }
 
                             val selectedSchedule = schedules[selectedScheduleIndex].waktu
-                            itemsIndexed(selectedSchedule) { index, item ->
+                            items(selectedSchedule) { item ->
                                 Crossfade(targetState = item) {
                                     ScheduleTimeItem(item = it)
-
-                                    if (index == (selectedSchedule.size - 1)) {
-                                        Spacer(modifier = Modifier.navigationBarsHeight())
-                                    }
                                 }
+                            }
+
+                            item {
+                                Spacer(modifier = Modifier.navigationBarsHeight())
                             }
                         }
                     }

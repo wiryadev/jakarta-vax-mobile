@@ -17,7 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.wiryadev.jakartavaxavailability.data.response.VaccineResponseItem
+import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
 import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
 import com.wiryadev.jakartavaxavailability.utils.compareToCurrentDateTime
 import com.wiryadev.jakartavaxavailability.utils.getMinutes
@@ -35,9 +35,11 @@ fun ItemVaccineAvailability(
             .background(
                 color = MaterialTheme.colors.surface
             )
-            .clickable(onClick = {
-                onClick(vaccineResponseItem.namaLokasiVaksinasi)
-            }),
+            .clickable(
+                onClick = {
+                    onClick(vaccineResponseItem.namaLokasiVaksinasi)
+                }
+            ),
     ) {
         Divider()
         Column(
@@ -63,7 +65,7 @@ fun ItemVaccineAvailability(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 Text(
-                    text = "Kec/Kel: ${vaccineResponseItem.kecamatan.capitalizeWords()} / ${vaccineResponseItem.kelurahan.capitalizeWords()}",
+                    text = "Kec / Kel: ${vaccineResponseItem.kecamatan.capitalizeWords()} / ${vaccineResponseItem.kelurahan.capitalizeWords()}",
                     style = MaterialTheme.typography.body1,
                 )
                 Text(

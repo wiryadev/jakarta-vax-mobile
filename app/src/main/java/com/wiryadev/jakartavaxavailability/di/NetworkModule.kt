@@ -1,7 +1,7 @@
 package com.wiryadev.jakartavaxavailability.di
 
-import com.wiryadev.jakartavaxavailability.data.network.ApiService
-import com.wiryadev.jakartavaxavailability.data.network.Endpoint
+import com.wiryadev.jakartavaxavailability.data.remote.network.ApiService
+import com.wiryadev.jakartavaxavailability.data.remote.network.Endpoint
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +20,8 @@ object NetworkModule {
     @Singleton
     fun provideHttpClient(): OkHttpClient = OkHttpClient
         .Builder()
-        .readTimeout(90, TimeUnit.SECONDS)
-        .connectTimeout(90, TimeUnit.SECONDS)
+        .readTimeout(120, TimeUnit.SECONDS)
+        .connectTimeout(120, TimeUnit.SECONDS)
         .build()
 
     @Provides
