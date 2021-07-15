@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.wiryadev.jakartavaxavailability.data.remote.response.Waktu
-import com.wiryadev.jakartavaxavailability.utils.returnDashIfNullOrEmpty
+import com.wiryadev.jakartavaxavailability.utils.returnDashIfNull
 
 @Composable
 fun ScheduleTimeHeader() {
@@ -64,14 +64,14 @@ fun ScheduleTimeItem(
                 modifier = Modifier.weight(1f),
             )
             Text(
-                text = item.kuota?.sisaKuota.toString().returnDashIfNullOrEmpty(),
+                text = item.kuota?.sisaKuota.toString().returnDashIfNull(),
                 style = MaterialTheme.typography.body2.copy(
                     fontWeight = FontWeight.Medium
                 ),
                 modifier = Modifier.weight(1f),
             )
             Text(
-                text = item.kuota?.totalKuota.toString().returnDashIfNullOrEmpty(),
+                text = item.kuota?.totalKuota.returnDashIfNull(),
                 style = MaterialTheme.typography.body2.copy(
                     fontWeight = FontWeight.Medium
                 ),

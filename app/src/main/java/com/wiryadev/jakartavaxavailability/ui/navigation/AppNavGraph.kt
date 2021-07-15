@@ -28,12 +28,9 @@ fun AppNavGraph(
     navController: NavHostController = rememberNavController(),
     startDestination: String = MainNavigation.HOME_ROUTE
 ) {
-    var detailScreenIsVisible by remember { mutableStateOf(false) }
-
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable(route = MainNavigation.HOME_ROUTE) { navBackStackEntry ->
-            detailScreenIsVisible = false
             val viewModel = hiltViewModel<HomeViewModel>()
 
             HomeScreen(
@@ -46,14 +43,12 @@ fun AppNavGraph(
                 onNavigationDetail = { locationId ->
                     if (navBackStackEntry.lifecycleIsResumed()) {
                         navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
-                        detailScreenIsVisible = true
                     }
                 }
             )
         }
 
         composable(route = MainNavigation.BOOKMARK_ROUTE) { navBackStackEntry ->
-            detailScreenIsVisible = false
             val viewModel = hiltViewModel<BookmarkViewModel>()
 
             AnimatedVisibility(
@@ -68,7 +63,6 @@ fun AppNavGraph(
                     onNavigationDetail = { locationId ->
                         if (navBackStackEntry.lifecycleIsResumed()) {
                             navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
-                            detailScreenIsVisible = true
                         }
                     },
                     onNavigateUp = {
@@ -96,8 +90,8 @@ fun AppNavGraph(
             val viewModel = hiltViewModel<DetailViewModel>()
 
             AnimatedVisibility(
-                visibleState = remember { MutableTransitionState(!detailScreenIsVisible) }
-                    .apply { targetState = detailScreenIsVisible },
+                visibleState = remember { MutableTransitionState(false) }
+                    .apply { targetState = true },
                 enter = slideInVertically(
                     initialOffsetY = { it / 3 }
                 ) + fadeIn(),

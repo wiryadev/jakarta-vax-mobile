@@ -41,10 +41,6 @@ fun Long.getMinutes(): Int {
  *  if so, return long dash
  *  otherwise, return itself
  */
-fun CharSequence?.returnDashIfNullOrEmpty(): String {
-    return if (!this.isNullOrEmpty()) {
-        this.toString()
-    } else {
-        "—"
-    }
+fun Any?.returnDashIfNull(): String {
+    return this?.toString() ?: "—"
 }

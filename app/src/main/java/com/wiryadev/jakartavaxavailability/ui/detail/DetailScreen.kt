@@ -26,7 +26,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
 import com.wiryadev.jakartavaxavailability.ui.components.*
 import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
-import com.wiryadev.jakartavaxavailability.utils.returnDashIfNullOrEmpty
+import com.wiryadev.jakartavaxavailability.utils.returnDashIfNull
 
 @ExperimentalAnimationApi
 @Composable
@@ -140,9 +140,9 @@ fun LocationInfo(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val faskes = location.jenisFaskes.returnDashIfNullOrEmpty()
+    val faskes = location.jenisFaskes.returnDashIfNull()
 
-    val alamat = location.alamatLokasiVaksinasi.returnDashIfNullOrEmpty()
+    val alamat = location.alamatLokasiVaksinasi.returnDashIfNull()
 
     Column(
         modifier = modifier.fillMaxWidth(),

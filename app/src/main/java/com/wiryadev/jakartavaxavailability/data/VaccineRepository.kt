@@ -1,6 +1,5 @@
 package com.wiryadev.jakartavaxavailability.data
 
-import android.util.Log
 import com.wiryadev.jakartavaxavailability.data.local.LocalDataSource
 import com.wiryadev.jakartavaxavailability.data.local.entity.VaccineBookmarkEntity
 import com.wiryadev.jakartavaxavailability.data.remote.RemoteDataSource
@@ -21,16 +20,11 @@ class VaccineRepository @Inject constructor(
         query: String,
         searchType: SearchType,
     ): List<VaccineResponseItem> {
-        return try {
-            remoteDataSource.getVaccines(
-                isRefreshing = isRefreshing,
-                query = query,
-                searchType = searchType
-            )
-        } catch (e: Exception) {
-            Log.d("Exception", "${e.message}")
-            emptyList()
-        }
+        return remoteDataSource.getVaccines(
+            isRefreshing = isRefreshing,
+            query = query,
+            searchType = searchType
+        )
     }
 
     suspend fun getLocationByName(name: String, isRefreshing: Boolean): VaccineResponseItem {
