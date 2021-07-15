@@ -1,10 +1,8 @@
 package com.wiryadev.jakartavaxavailability.ui.home
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import com.wiryadev.jakartavaxavailability.ui.components.ErrorScreen
 import com.wiryadev.jakartavaxavailability.ui.components.IllustrationWithText
 import com.wiryadev.jakartavaxavailability.ui.components.SearchAppBar
 import com.wiryadev.jakartavaxavailability.ui.components.VaccineAvailabilityList
+import com.wiryadev.jakartavaxavailability.utils.DummyPlaceholder
 
 @ExperimentalComposeUiApi
 @Composable
@@ -59,33 +58,33 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.surface)
         ) {
-            if (loading && results.isEmpty()) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
-                    onRefresh = { viewModel.refresh() },
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    if (isError) {
-                        ErrorScreen(
-                            onRetryClick = { viewModel.refresh() },
-                            modifier = Modifier.align(Alignment.Center),
-                        )
-                    } else if (results.isEmpty() && !isError) {
-                        IllustrationWithText(
-                            imageId = R.drawable.ic_empty_result,
-                            title = "Data tidak ditemukan",
-                            message = "Cobalah dengan kata kunci lain",
-                            modifier = Modifier.align(Alignment.Center),
-                        )
-                    } else {
-                        Crossfade(targetState = results) { target ->
-                            VaccineAvailabilityList(items = target, onItemClick = onNavigationDetail)
-                        }
-                    }
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                onRefresh = { viewModel.refresh() },
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                if (isError) {
+                    ErrorScreen(
+                        onRetryClick = { viewModel.refresh() },
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                } else if (loading || isRefreshing || results.isNotEmpty()) {
+                    VaccineAvailabilityList(
+                        items = if (results.isNotEmpty()) {
+                            results
+                        } else {
+                               DummyPlaceholder.getDummyList()
+                        },
+                        onItemClick = onNavigationDetail,
+                        loading = loading || isRefreshing,
+                    )
+                } else {
+                    IllustrationWithText(
+                        imageId = R.drawable.ic_empty_result,
+                        title = "Data tidak ditemukan",
+                        message = "Cobalah dengan kata kunci lain",
+                        modifier = Modifier.align(Alignment.Center),
+                    )
                 }
             }
         }

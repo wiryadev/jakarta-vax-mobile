@@ -13,13 +13,18 @@ import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseI
 fun VaccineAvailabilityList(
     items: List<VaccineResponseItem>,
     onItemClick: (String) -> Unit,
+    loading: Boolean,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
         itemsIndexed(items = items) { index, item ->
-            ItemVaccineAvailability(vaccineResponseItem = item, onClick = onItemClick)
+            ItemVaccineAvailability(
+                vaccineResponseItem = item,
+                onClick = onItemClick,
+                loading = loading,
+            )
 
             if (index == (items.size - 1)) {
                 Spacer(

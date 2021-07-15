@@ -18,15 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wiryadev.jakartavaxavailability.data.remote.response.VaccineResponseItem
-import com.wiryadev.jakartavaxavailability.utils.capitalizeWords
-import com.wiryadev.jakartavaxavailability.utils.compareToCurrentDateTime
-import com.wiryadev.jakartavaxavailability.utils.getMinutes
-import com.wiryadev.jakartavaxavailability.utils.toDate
+import com.wiryadev.jakartavaxavailability.utils.*
 
 @Composable
 fun ItemVaccineAvailability(
     vaccineResponseItem: VaccineResponseItem,
     onClick: (String) -> Unit,
+    loading: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -37,7 +35,9 @@ fun ItemVaccineAvailability(
             )
             .clickable(
                 onClick = {
-                    onClick(vaccineResponseItem.namaLokasiVaksinasi)
+                    if (!loading) {
+                        onClick(vaccineResponseItem.namaLokasiVaksinasi)
+                    }
                 }
             ),
     ) {
@@ -53,12 +53,14 @@ fun ItemVaccineAvailability(
                 Text(
                     text = vaccineResponseItem.namaLokasiVaksinasi,
                     style = MaterialTheme.typography.h6,
+                    modifier = Modifier.shimmerPlaceholder(visible = loading),
                 )
                 Text(
                     text = "Diperbarui $lastUpdated menit lalu",
                     style = MaterialTheme.typography.subtitle2.copy(
                         color = MaterialTheme.colors.onSecondary
                     ),
+                    modifier = Modifier.shimmerPlaceholder(visible = loading),
                 )
             }
             Column(
@@ -67,15 +69,17 @@ fun ItemVaccineAvailability(
                 Text(
                     text = "Kec / Kel: ${vaccineResponseItem.kecamatan.capitalizeWords()} / ${vaccineResponseItem.kelurahan.capitalizeWords()}",
                     style = MaterialTheme.typography.body1,
+                    modifier = Modifier.shimmerPlaceholder(visible = loading),
                 )
                 Text(
                     text = vaccineResponseItem.wilayah.capitalizeWords(),
                     style = MaterialTheme.typography.body1,
+                    modifier = Modifier.shimmerPlaceholder(visible = loading),
                 )
             }
             LazyRow {
                 itemsIndexed(vaccineResponseItem.jadwal) { index, jadwal ->
-                    ItemDate(date = jadwal.id, index = index)
+                    ItemDate(date = jadwal.id, index = index, loading = loading)
                 }
             }
         }
@@ -86,6 +90,7 @@ fun ItemVaccineAvailability(
 fun ItemDate(
     date: String,
     index: Int,
+    loading: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -94,7 +99,8 @@ fun ItemDate(
                 top = 8.dp,
                 bottom = 8.dp,
                 start = if (index == 0) 0.dp else 8.dp
-            ),
+            )
+            .shimmerPlaceholder(visible = loading),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
             width = 1.dp,

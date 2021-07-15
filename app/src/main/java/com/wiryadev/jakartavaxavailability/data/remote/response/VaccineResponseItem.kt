@@ -11,7 +11,7 @@ data class VaccineResponseItem(
     @SerializedName("jenis_faskes")
     val jenisFaskes: String?,
     @SerializedName("jumlah_tim_vaksinator")
-    val jumlahTimVaksinator: Int,
+    val jumlahTimVaksinator: Int?,
     @SerializedName("kecamatan")
     val kecamatan: String,
     @SerializedName("kelurahan")

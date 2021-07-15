@@ -1,5 +1,10 @@
 package com.wiryadev.jakartavaxavailability.utils
 
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -43,4 +48,14 @@ fun Long.getMinutes(): Int {
  */
 fun Any?.returnDashIfNull(): String {
     return this?.toString() ?: "—"
+}
+
+// return placeholder modifier with shimmer highlight
+fun Modifier.shimmerPlaceholder(visible: Boolean): Modifier {
+    return composed {
+        placeholder(
+            visible = visible,
+            highlight = PlaceholderHighlight.shimmer()
+        )
+    }
 }
