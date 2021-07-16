@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.statusBarsHeight
@@ -30,25 +32,36 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        installSplashScreen()
+
         setContent {
-            JakartaVaxAvailabilityTheme {
-                ProvideWindowInsets {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Column {
-                            val appBarColor = MaterialTheme.colors.surface.copy(alpha = 0.87f)
+            MainScreen()
+        }
+    }
 
-                            Spacer(
-                                modifier = Modifier
-                                    .background(appBarColor)
-                                    .fillMaxWidth()
-                                    .statusBarsHeight()
-                            )
+}
 
-                            AppNavGraph()
-                        }
-                    }
+@ExperimentalComposeUiApi
+@ExperimentalAnimationApi
+@Composable
+fun MainScreen() {
+    JakartaVaxAvailabilityTheme {
+        ProvideWindowInsets {
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Column {
+                    val appBarColor = MaterialTheme.colors.surface.copy(alpha = 0.87f)
+
+                    Spacer(
+                        modifier = Modifier
+                            .background(appBarColor)
+                            .fillMaxWidth()
+                            .statusBarsHeight()
+                    )
+
+                    AppNavGraph()
                 }
             }
         }
+
     }
 }
