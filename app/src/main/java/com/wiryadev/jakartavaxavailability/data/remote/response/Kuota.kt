@@ -1,11 +1,12 @@
 package com.wiryadev.jakartavaxavailability.data.remote.response
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-import com.google.gson.annotations.SerializedName
-
+@JsonClass(generateAdapter = true)
 data class Kuota(
-    @SerializedName("sisaKuota")
+   @Json(name = "sisaKuota")
     val sisaKuota: Int,
-    @SerializedName("totalKuota")
+   @Json(name = "totalKuota")
     val totalKuota: Int,
 )

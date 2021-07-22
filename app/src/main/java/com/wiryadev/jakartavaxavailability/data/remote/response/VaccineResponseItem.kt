@@ -1,31 +1,32 @@
 package com.wiryadev.jakartavaxavailability.data.remote.response
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-import com.google.gson.annotations.SerializedName
-
+@JsonClass(generateAdapter = true)
 data class VaccineResponseItem(
-    @SerializedName("alamat_lokasi_vaksinasi")
+   @Json(name = "alamat_lokasi_vaksinasi")
     val alamatLokasiVaksinasi: String?,
-    @SerializedName("jadwal")
+   @Json(name = "jadwal")
     val jadwal: List<Jadwal>,
-    @SerializedName("jenis_faskes")
+   @Json(name = "jenis_faskes")
     val jenisFaskes: String?,
-    @SerializedName("jumlah_tim_vaksinator")
+   @Json(name = "jumlah_tim_vaksinator")
     val jumlahTimVaksinator: Int?,
-    @SerializedName("kecamatan")
+   @Json(name = "kecamatan")
     val kecamatan: String,
-    @SerializedName("kelurahan")
+   @Json(name = "kelurahan")
     val kelurahan: String,
-    @SerializedName("kode_lokasi_vaksinasi")
+   @Json(name = "kode_lokasi_vaksinasi")
     val kodeLokasiVaksinasi: Int?,
-    @SerializedName("kodepos")
+   @Json(name = "kodepos")
     val kodepos: String?,
-    @SerializedName("last_updated_at")
+   @Json(name = "last_updated_at")
     val lastUpdatedAt: String,
-    @SerializedName("nama_lokasi_vaksinasi")
+   @Json(name = "nama_lokasi_vaksinasi")
     val namaLokasiVaksinasi: String,
-    @SerializedName("open_regis")
+   @Json(name = "open_regis")
     val openRegis: String?,
-    @SerializedName("wilayah")
+   @Json(name = "wilayah")
     val wilayah: String
 )
