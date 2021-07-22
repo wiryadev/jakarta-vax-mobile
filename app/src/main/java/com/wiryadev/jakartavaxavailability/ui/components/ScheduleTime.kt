@@ -64,7 +64,7 @@ fun ScheduleTimeItem(
                 modifier = Modifier.weight(1f),
             )
             Text(
-                text = item.kuota?.sisaKuota.toString().returnDashIfNull(),
+                text = item.kuota?.sisaKuota.returnDashIfNull(),
                 style = MaterialTheme.typography.body2.copy(
                     fontWeight = FontWeight.Medium
                 ),
