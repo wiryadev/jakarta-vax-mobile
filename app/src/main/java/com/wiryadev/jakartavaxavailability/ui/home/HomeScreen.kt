@@ -68,23 +68,25 @@ fun HomeScreen(
                         onRetryClick = { viewModel.refresh() },
                         modifier = Modifier.align(Alignment.Center),
                     )
-                } else if (loading || isRefreshing || results.isNotEmpty()) {
-                    VaccineAvailabilityList(
-                        items = if (results.isNotEmpty()) {
-                            results
-                        } else {
-                               DummyPlaceholder.getDummyList()
-                        },
-                        onItemClick = onNavigationDetail,
-                        loading = loading || isRefreshing,
-                    )
                 } else {
-                    IllustrationWithText(
-                        imageId = R.drawable.ic_empty_result,
-                        title = "Data tidak ditemukan",
-                        message = "Cobalah dengan kata kunci lain",
-                        modifier = Modifier.align(Alignment.Center),
-                    )
+                    if (loading || isRefreshing || results.isNotEmpty()) {
+                        VaccineAvailabilityList(
+                            items = if (results.isNotEmpty()) {
+                                results
+                            } else {
+                                DummyPlaceholder.getDummyList()
+                            },
+                            onItemClick = onNavigationDetail,
+                            loading = loading || isRefreshing,
+                        )
+                    } else {
+                        IllustrationWithText(
+                            imageId = R.drawable.ic_empty_result,
+                            title = "Data tidak ditemukan",
+                            message = "Cobalah dengan kata kunci lain",
+                            modifier = Modifier.align(Alignment.Center),
+                        )
+                    }
                 }
             }
         }

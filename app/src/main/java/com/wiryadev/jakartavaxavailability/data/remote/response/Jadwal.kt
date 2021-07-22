@@ -1,11 +1,12 @@
 package com.wiryadev.jakartavaxavailability.data.remote.response
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-import com.google.gson.annotations.SerializedName
-
+@JsonClass(generateAdapter = true)
 data class Jadwal(
-    @SerializedName("id")
+   @Json(name = "id")
     val id: String,
-    @SerializedName("waktu")
+   @Json(name = "waktu")
     val waktu: List<Waktu>,
 )
