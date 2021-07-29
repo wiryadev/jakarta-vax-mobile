@@ -12,8 +12,4 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_content</item>
         <item name="postSplashScreenTheme">@style/Theme.JakartaVaxAvailability</item>
     </style>
-
-    <style name="Theme.JakartaVaxAvailability.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.JakartaVaxAvailability.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
