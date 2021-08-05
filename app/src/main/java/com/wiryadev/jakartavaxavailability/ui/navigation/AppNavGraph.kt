@@ -1,8 +1,7 @@
 package com.wiryadev.jakartavaxavailability.ui.navigation
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -10,10 +9,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.wiryadev.jakartavaxavailability.ui.bookmark.BookmarkScreen
 import com.wiryadev.jakartavaxavailability.ui.bookmark.BookmarkViewModel
 import com.wiryadev.jakartavaxavailability.ui.detail.DetailScreen
@@ -25,10 +24,10 @@ import com.wiryadev.jakartavaxavailability.ui.home.HomeViewModel
 @ExperimentalComposeUiApi
 @Composable
 fun AppNavGraph(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberAnimatedNavController(),
     startDestination: String = MainNavigation.HOME_ROUTE
 ) {
-    NavHost(navController = navController, startDestination = startDestination) {
+    AnimatedNavHost(navController = navController, startDestination = startDestination) {
 
         composable(route = MainNavigation.HOME_ROUTE) { navBackStackEntry ->
             val viewModel = hiltViewModel<HomeViewModel>()
@@ -48,28 +47,41 @@ fun AppNavGraph(
             )
         }
 
-        composable(route = MainNavigation.BOOKMARK_ROUTE) { navBackStackEntry ->
+        composable(
+            route = MainNavigation.BOOKMARK_ROUTE,
+            enterTransition = { initial, _ ->
+                when (initial.destination.route) {
+                    MainNavigation.HOME_ROUTE -> {
+                        fadeIn() + expandIn(
+                            expandFrom = Alignment.BottomStart,
+                        )
+                    }
+                    else -> null
+                }
+            },
+            exitTransition = { _, target ->
+                when (target.destination.route) {
+                    MainNavigation.HOME_ROUTE ->
+                        fadeOut() + shrinkOut(
+                            shrinkTowards = Alignment.BottomStart,
+                        )
+                    else -> null
+                }
+            },
+        ) { navBackStackEntry ->
             val viewModel = hiltViewModel<BookmarkViewModel>()
 
-            AnimatedVisibility(
-                visibleState = remember { MutableTransitionState(false) }
-                    .apply { targetState = true },
-                enter = fadeIn() + expandIn(
-                    expandFrom = Alignment.BottomStart,
-                ),
-            ) {
-                BookmarkScreen(
-                    viewModel = viewModel,
-                    onNavigationDetail = { locationId ->
-                        if (navBackStackEntry.lifecycleIsResumed()) {
-                            navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
-                        }
-                    },
-                    onNavigateUp = {
-                        navController.navigateUp()
+            BookmarkScreen(
+                viewModel = viewModel,
+                onNavigationDetail = { locationId ->
+                    if (navBackStackEntry.lifecycleIsResumed()) {
+                        navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
                     }
-                )
-            }
+                },
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
         }
 
         composable(
@@ -81,7 +93,26 @@ fun AppNavGraph(
                         type = NavType.StringType
                     }
                 )
-            )
+            ),
+            enterTransition = { initial, _ ->
+                when (initial.destination.route) {
+                    MainNavigation.HOME_ROUTE -> {
+                        slideInVertically(
+                            initialOffsetY = { it / 3 }
+                        ) + fadeIn()
+                    }
+                    else -> null
+                }
+            },
+            exitTransition = { _, target ->
+                when (target.destination.route) {
+                    MainNavigation.HOME_ROUTE ->
+                        slideOutVertically(
+                            targetOffsetY = { it / 3 }
+                        ) + fadeOut()
+                    else -> null
+                }
+            },
         ) { navBackStackEntry ->
             val arguments = requireNotNull(navBackStackEntry.arguments)
             val locationName =
@@ -89,21 +120,14 @@ fun AppNavGraph(
 
             val viewModel = hiltViewModel<DetailViewModel>()
 
-            AnimatedVisibility(
-                visibleState = remember { MutableTransitionState(false) }
-                    .apply { targetState = true },
-                enter = slideInVertically(
-                    initialOffsetY = { it / 3 }
-                ) + fadeIn(),
-            ) {
-                DetailScreen(
-                    locationName = locationName,
-                    viewModel = viewModel,
-                    onNavigateUp = {
-                        navController.navigateUp()
-                    }
-                )
-            }
+            DetailScreen(
+                locationName = locationName,
+                viewModel = viewModel,
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
+
         }
     }
 
