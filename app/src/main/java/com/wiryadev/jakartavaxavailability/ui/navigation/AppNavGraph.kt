@@ -52,9 +52,7 @@ fun AppNavGraph(
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
-                        fadeIn() + expandIn(
-                            expandFrom = Alignment.BottomStart,
-                        )
+                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
                     }
                     else -> null
                 }
@@ -62,9 +60,7 @@ fun AppNavGraph(
             exitTransition = { _, target ->
                 when (target.destination.route) {
                     MainNavigation.HOME_ROUTE ->
-                        fadeOut() + shrinkOut(
-                            shrinkTowards = Alignment.BottomStart,
-                        )
+                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
                     else -> null
                 }
             },
@@ -97,9 +93,7 @@ fun AppNavGraph(
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
-                        slideInVertically(
-                            initialOffsetY = { it / 3 }
-                        ) + fadeIn()
+                        slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
                     }
                     else -> null
                 }
@@ -107,9 +101,7 @@ fun AppNavGraph(
             exitTransition = { _, target ->
                 when (target.destination.route) {
                     MainNavigation.HOME_ROUTE ->
-                        slideOutVertically(
-                            targetOffsetY = { it / 3 }
-                        ) + fadeOut()
+                        slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
                     else -> null
                 }
             },
@@ -127,7 +119,6 @@ fun AppNavGraph(
                     navController.navigateUp()
                 }
             )
-
         }
     }
 
