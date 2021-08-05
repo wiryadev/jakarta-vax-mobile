@@ -47,20 +47,21 @@ fun AppNavGraph(
             )
         }
 
+        val bookmarkEnterTransition = fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+        val bookmarkExitTransition = fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
         composable(
             route = MainNavigation.BOOKMARK_ROUTE,
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
-                    MainNavigation.HOME_ROUTE -> {
-                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
-                    }
+                    MainNavigation.HOME_ROUTE -> bookmarkEnterTransition
+                    MainNavigation.BOOKMARK_ROUTE -> bookmarkEnterTransition
                     else -> null
                 }
             },
             exitTransition = { _, target ->
                 when (target.destination.route) {
-                    MainNavigation.HOME_ROUTE ->
-                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                    MainNavigation.HOME_ROUTE -> bookmarkExitTransition
+                    MainNavigation.BOOKMARK_ROUTE -> bookmarkExitTransition
                     else -> null
                 }
             },
@@ -80,6 +81,8 @@ fun AppNavGraph(
             )
         }
 
+        val detailEnterTransition = slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
+        val detailExitTransition = slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
         composable(
             route = "${MainNavigation.DETAIL_ROUTE}/{${MainNavigation.ArgsKey.DETAIL_LOCATION_ID}}",
             arguments = listOf(
@@ -92,16 +95,15 @@ fun AppNavGraph(
             ),
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
-                    MainNavigation.HOME_ROUTE -> {
-                        slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
-                    }
+                    MainNavigation.HOME_ROUTE -> detailEnterTransition
+                    MainNavigation.BOOKMARK_ROUTE -> detailEnterTransition
                     else -> null
                 }
             },
             exitTransition = { _, target ->
                 when (target.destination.route) {
-                    MainNavigation.HOME_ROUTE ->
-                        slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+                    MainNavigation.HOME_ROUTE -> detailExitTransition
+                    MainNavigation.BOOKMARK_ROUTE -> detailExitTransition
                     else -> null
                 }
             },
