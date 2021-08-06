@@ -13,8 +13,8 @@ android {
         applicationId = "com.wiryadev.jakartavaxavailability"
         minSdk = 21
         targetSdk = 31
-        versionCode = 4
-        versionName = "1.3.0"
+        versionCode = 5
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -117,4 +117,5 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 }

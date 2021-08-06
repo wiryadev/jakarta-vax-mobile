@@ -29,9 +29,7 @@ fun String.toDate(): Date? {
              between current system time and the time passed to the function
  */
 fun Date.compareToCurrentDateTime(): Long {
-    val thisTime: Long = this.time
-    val currentTime: Long = System.currentTimeMillis()
-    return currentTime - thisTime
+    return System.currentTimeMillis() - this.time
 }
 
 /**
@@ -42,7 +40,7 @@ fun Long.getMinutes(): Int {
     return TimeUnit.MILLISECONDS.toMinutes(this).toInt()
 }
 
-/** Check if given string is null or empty
+/** Check if given value is null or empty
  *  if so, return long dash
  *  otherwise, return itself
  */
