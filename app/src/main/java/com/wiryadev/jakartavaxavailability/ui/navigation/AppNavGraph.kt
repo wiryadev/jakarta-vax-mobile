@@ -87,7 +87,6 @@ fun AppNavGraph(
                 when (initial.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
                         fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
-//                        expandIn(animationSpec = tween(700))
                     }
                     MainNavigation.DETAIL_ROUTE -> {
                         slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
