@@ -33,9 +33,6 @@ fun AppNavGraph(
             route = MainNavigation.HOME_ROUTE,
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
-                    MainNavigation.BOOKMARK_ROUTE -> {
-                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
-                    }
                     MainNavigation.DETAIL_ROUTE -> {
                         slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
                     }
@@ -44,9 +41,6 @@ fun AppNavGraph(
             },
             exitTransition = { _, target ->
                 when (target.destination.route) {
-                    MainNavigation.BOOKMARK_ROUTE -> {
-                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
-                    }
                     MainNavigation.DETAIL_ROUTE -> {
                         slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
                     }
@@ -55,9 +49,6 @@ fun AppNavGraph(
             },
             popEnterTransition = { initial, _ ->
                 when (initial.destination.route) {
-                    MainNavigation.BOOKMARK_ROUTE -> {
-                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
-                    }
                     MainNavigation.DETAIL_ROUTE -> {
                         slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
                     }
@@ -66,9 +57,6 @@ fun AppNavGraph(
             },
             popExitTransition = { _, target ->
                 when (target.destination.route) {
-                    MainNavigation.BOOKMARK_ROUTE -> {
-                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
-                    }
                     MainNavigation.DETAIL_ROUTE -> {
                         slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
                     }
@@ -99,6 +87,7 @@ fun AppNavGraph(
                 when (initial.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
                         fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+//                        expandIn(animationSpec = tween(700))
                     }
                     MainNavigation.DETAIL_ROUTE -> {
                         slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
@@ -164,9 +153,7 @@ fun AppNavGraph(
             arguments = listOf(
                 navArgument(
                     name = MainNavigation.ArgsKey.DETAIL_LOCATION_ID,
-                    builder = {
-                        type = NavType.StringType
-                    }
+                    builder = { type = NavType.StringType }
                 )
             ),
             enterTransition = { initial, _ ->

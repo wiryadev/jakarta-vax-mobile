@@ -13,8 +13,8 @@ android {
         applicationId = "com.wiryadev.jakartavaxavailability"
         minSdk = 21
         targetSdk = 31
-        versionCode = 4
-        versionName = "1.3.0"
+        versionCode = 5
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
