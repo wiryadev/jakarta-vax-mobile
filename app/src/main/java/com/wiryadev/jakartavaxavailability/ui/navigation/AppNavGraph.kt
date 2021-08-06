@@ -29,7 +29,53 @@ fun AppNavGraph(
 ) {
     AnimatedNavHost(navController = navController, startDestination = startDestination) {
 
-        composable(route = MainNavigation.HOME_ROUTE) { navBackStackEntry ->
+        composable(
+            route = MainNavigation.HOME_ROUTE,
+            enterTransition = { initial, _ ->
+                when (initial.destination.route) {
+                    MainNavigation.BOOKMARK_ROUTE -> {
+                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
+                    }
+                    else -> null
+                }
+            },
+            exitTransition = { _, target ->
+                when (target.destination.route) {
+                    MainNavigation.BOOKMARK_ROUTE -> {
+                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
+                    }
+                    else -> null
+                }
+            },
+            popEnterTransition = { initial, _ ->
+                when (initial.destination.route) {
+                    MainNavigation.BOOKMARK_ROUTE -> {
+                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
+                    }
+                    else -> null
+                }
+            },
+            popExitTransition = { _, target ->
+                when (target.destination.route) {
+                    MainNavigation.BOOKMARK_ROUTE -> {
+                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+                    }
+                    else -> null
+                }
+            },
+        ) { navBackStackEntry ->
             val viewModel = hiltViewModel<HomeViewModel>()
 
             HomeScreen(
@@ -47,21 +93,49 @@ fun AppNavGraph(
             )
         }
 
-        val bookmarkEnterTransition = fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
-        val bookmarkExitTransition = fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
         composable(
             route = MainNavigation.BOOKMARK_ROUTE,
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
-                    MainNavigation.HOME_ROUTE -> bookmarkEnterTransition
-                    MainNavigation.BOOKMARK_ROUTE -> bookmarkEnterTransition
+                    MainNavigation.HOME_ROUTE -> {
+                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
+                    }
                     else -> null
                 }
             },
             exitTransition = { _, target ->
                 when (target.destination.route) {
-                    MainNavigation.HOME_ROUTE -> bookmarkExitTransition
-                    MainNavigation.BOOKMARK_ROUTE -> bookmarkExitTransition
+                    MainNavigation.HOME_ROUTE -> {
+                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
+                    }
+                    else -> null
+                }
+            },
+            popEnterTransition = { initial, _ ->
+                when (initial.destination.route) {
+                    MainNavigation.HOME_ROUTE -> {
+                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
+                    }
+                    else -> null
+                }
+            },
+            popExitTransition = { _, target ->
+                when (target.destination.route) {
+                    MainNavigation.HOME_ROUTE -> {
+                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                    }
+                    MainNavigation.DETAIL_ROUTE -> {
+                        slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+                    }
                     else -> null
                 }
             },
@@ -82,7 +156,9 @@ fun AppNavGraph(
         }
 
         val detailEnterTransition = slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
-        val detailExitTransition = slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+        val detailExitTransition = slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
+        val detailPopEnterTransition = slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
+        val detailPopExitTransition = slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
         composable(
             route = "${MainNavigation.DETAIL_ROUTE}/{${MainNavigation.ArgsKey.DETAIL_LOCATION_ID}}",
             arguments = listOf(
@@ -104,6 +180,20 @@ fun AppNavGraph(
                 when (target.destination.route) {
                     MainNavigation.HOME_ROUTE -> detailExitTransition
                     MainNavigation.BOOKMARK_ROUTE -> detailExitTransition
+                    else -> null
+                }
+            },
+            popEnterTransition = { initial, _ ->
+                when (initial.destination.route) {
+                    MainNavigation.HOME_ROUTE -> detailPopEnterTransition
+                    MainNavigation.BOOKMARK_ROUTE -> detailPopEnterTransition
+                    else -> null
+                }
+            },
+            popExitTransition = { _, target ->
+                when (target.destination.route) {
+                    MainNavigation.HOME_ROUTE -> detailPopExitTransition
+                    MainNavigation.BOOKMARK_ROUTE -> detailPopExitTransition
                     else -> null
                 }
             },
