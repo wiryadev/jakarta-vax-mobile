@@ -1,6 +1,7 @@
 package com.wiryadev.jakartavaxavailability.ui.navigation
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -34,7 +35,10 @@ fun AppNavGraph(
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
+                        slideInHorizontally(
+                            initialOffsetX = { 300 },
+                            animationSpec = tween(300)
+                        ) + fadeIn(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -42,7 +46,10 @@ fun AppNavGraph(
             exitTransition = { _, target ->
                 when (target.destination.route) {
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
+                        slideOutHorizontally(
+                            targetOffsetX = { -300 },
+                            animationSpec = tween(300)
+                        ) + fadeOut(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -50,15 +57,10 @@ fun AppNavGraph(
             popEnterTransition = { initial, _ ->
                 when (initial.destination.route) {
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
-                    }
-                    else -> null
-                }
-            },
-            popExitTransition = { _, target ->
-                when (target.destination.route) {
-                    MainNavigation.DETAIL_ROUTE -> {
-                        slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+                        slideInHorizontally(
+                            initialOffsetX = { -300 },
+                            animationSpec = tween(300)
+                        ) + fadeIn(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -86,10 +88,16 @@ fun AppNavGraph(
             enterTransition = { initial, _ ->
                 when (initial.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
-                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+                        fadeIn() + expandIn(
+                            expandFrom = Alignment.BottomStart,
+                            animationSpec = tween(300)
+                        )
                     }
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
+                        slideInHorizontally(
+                            initialOffsetX = { 300 },
+                            animationSpec = tween(300)
+                        ) + fadeIn(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -97,10 +105,16 @@ fun AppNavGraph(
             exitTransition = { _, target ->
                 when (target.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
-                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                        fadeOut() + shrinkOut(
+                            shrinkTowards = Alignment.BottomStart,
+                            animationSpec = tween(300)
+                        )
                     }
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
+                        slideOutHorizontally(
+                            targetOffsetX = { -300 },
+                            animationSpec = tween(300)
+                        ) + fadeOut(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -108,10 +122,16 @@ fun AppNavGraph(
             popEnterTransition = { initial, _ ->
                 when (initial.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
-                        fadeIn() + expandIn(expandFrom = Alignment.BottomStart)
+                        fadeIn() + expandIn(
+                            expandFrom = Alignment.BottomStart,
+                            animationSpec = tween(300)
+                        )
                     }
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
+                        slideInHorizontally(
+                            initialOffsetX = { -300 },
+                            animationSpec = tween(300)
+                        ) + fadeIn(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -119,10 +139,16 @@ fun AppNavGraph(
             popExitTransition = { _, target ->
                 when (target.destination.route) {
                     MainNavigation.HOME_ROUTE -> {
-                        fadeOut() + shrinkOut(shrinkTowards = Alignment.BottomStart)
+                        fadeOut() + shrinkOut(
+                            shrinkTowards = Alignment.BottomStart,
+                            animationSpec = tween(300)
+                        )
                     }
                     MainNavigation.DETAIL_ROUTE -> {
-                        slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+                        slideOutHorizontally(
+                            targetOffsetX = { -300 },
+                            animationSpec = tween(300)
+                        ) + fadeOut(animationSpec = tween(300))
                     }
                     else -> null
                 }
@@ -143,10 +169,20 @@ fun AppNavGraph(
             )
         }
 
-        val detailEnterTransition = slideInVertically(initialOffsetY = { it / 3 }) + fadeIn()
-        val detailExitTransition = slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
-        val detailPopEnterTransition = slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn()
-        val detailPopExitTransition = slideOutVertically(targetOffsetY = { it / 3 }) + fadeOut()
+        val detailEnterTransition = slideInHorizontally(
+            initialOffsetX = { 300 },
+            animationSpec = tween(300)
+        ) + fadeIn(animationSpec = tween(300))
+
+        val detailExitTransition = slideOutHorizontally(
+            targetOffsetX = { -300 }, animationSpec = tween(300)
+        ) + fadeOut(animationSpec = tween(300))
+
+        val detailPopExitTransition = slideOutHorizontally(
+            targetOffsetX = { 300 },
+            animationSpec = tween(300)
+        ) + fadeOut(animationSpec = tween(300))
+
         composable(
             route = "${MainNavigation.DETAIL_ROUTE}/{${MainNavigation.ArgsKey.DETAIL_LOCATION_ID}}",
             arguments = listOf(
@@ -166,13 +202,6 @@ fun AppNavGraph(
                 when (target.destination.route) {
                     MainNavigation.HOME_ROUTE -> detailExitTransition
                     MainNavigation.BOOKMARK_ROUTE -> detailExitTransition
-                    else -> null
-                }
-            },
-            popEnterTransition = { initial, _ ->
-                when (initial.destination.route) {
-                    MainNavigation.HOME_ROUTE -> detailPopEnterTransition
-                    MainNavigation.BOOKMARK_ROUTE -> detailPopEnterTransition
                     else -> null
                 }
             },
