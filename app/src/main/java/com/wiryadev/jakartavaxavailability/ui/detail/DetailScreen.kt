@@ -33,7 +33,7 @@ import com.wiryadev.jakartavaxavailability.utils.returnDashIfNull
 fun DetailScreen(
     locationName: String,
     viewModel: DetailViewModel,
-    onNavigateUp: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
     viewModel.locationName.value = locationName
     viewModel.getDetailItem()
@@ -60,7 +60,7 @@ fun DetailScreen(
                     onRemoveBookmark = { entity ->
                         viewModel.removeFromBookmark(entity)
                     },
-                    onNavigateUp = onNavigateUp,
+                    onNavigateUp = onBackPressed,
                 )
             }
         }

@@ -21,7 +21,7 @@ import com.wiryadev.jakartavaxavailability.ui.components.IllustrationWithText
 fun BookmarkScreen(
     viewModel: BookmarkViewModel,
     onNavigationDetail: (String) -> Unit,
-    onNavigateUp: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
     val list by viewModel.bookmarkList.collectAsState()
 
@@ -30,7 +30,7 @@ fun BookmarkScreen(
             TopAppBar(
                 backgroundColor = MaterialTheme.colors.surface,
             ) {
-                BackButton(onNavigateUp = onNavigateUp)
+                BackButton(onNavigateUp = onBackPressed)
                 Text(text = "Daftar Bookmark")
             }
         }

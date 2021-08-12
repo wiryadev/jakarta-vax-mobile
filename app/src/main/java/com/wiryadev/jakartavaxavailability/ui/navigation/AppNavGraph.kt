@@ -163,8 +163,8 @@ fun AppNavGraph(
                         navController.navigate("${MainNavigation.DETAIL_ROUTE}/${locationId}")
                     }
                 },
-                onNavigateUp = {
-                    navController.navigateUp()
+                onBackPressed = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -222,13 +222,12 @@ fun AppNavGraph(
             DetailScreen(
                 locationName = locationName,
                 viewModel = viewModel,
-                onNavigateUp = {
-                    navController.navigateUp()
+                onBackPressed = {
+                    navController.popBackStack()
                 }
             )
         }
     }
-
 }
 
 private fun NavBackStackEntry.lifecycleIsResumed() =
